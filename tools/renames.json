@@ -1,0 +1,3278 @@
+[
+  {
+    "file": "src/game/state.ts",
+    "name": "default_g_path",
+    "to": "defaultGraphicsPath",
+    "kind": "property",
+    "cpp": "default_g_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "default_s_path",
+    "to": "defaultSoundPath",
+    "kind": "property",
+    "cpp": "default_s_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "g_paths",
+    "to": "graphicsPaths",
+    "kind": "property",
+    "cpp": "g_paths"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_g_paths",
+    "to": "graphicsPathCount",
+    "kind": "property",
+    "cpp": "n_g_paths"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "act_g_path",
+    "to": "graphicsPathIndex",
+    "kind": "property",
+    "cpp": "act_g_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "g_path",
+    "to": "graphicsPath",
+    "kind": "property",
+    "cpp": "g_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "s_paths",
+    "to": "soundPaths",
+    "kind": "property",
+    "cpp": "s_paths"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_s_paths",
+    "to": "soundPathCount",
+    "kind": "property",
+    "cpp": "n_s_paths"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "act_s_path",
+    "to": "soundPathIndex",
+    "kind": "property",
+    "cpp": "act_s_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "s_path",
+    "to": "soundPath",
+    "kind": "property",
+    "cpp": "s_path"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "konami_bmp",
+    "to": "konamiBitmap",
+    "kind": "property",
+    "cpp": "konami_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "menu_bmp",
+    "to": "menuBitmap",
+    "kind": "property",
+    "cpp": "menu_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "tiles_bmp",
+    "to": "tilesBitmap",
+    "kind": "property",
+    "cpp": "tiles_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "tiles2_bmp",
+    "to": "tiles2Bitmap",
+    "kind": "property",
+    "cpp": "tiles2_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "enemy_bmp",
+    "to": "enemyBitmap",
+    "kind": "property",
+    "cpp": "enemy_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "enemy2_bmp",
+    "to": "enemy2Bitmap",
+    "kind": "property",
+    "cpp": "enemy2_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "final_bmp",
+    "to": "finalBitmap",
+    "kind": "property",
+    "cpp": "final_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_tiles",
+    "to": "tileCount",
+    "kind": "property",
+    "cpp": "n_tiles"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "col_buffer",
+    "to": "collision",
+    "kind": "property",
+    "cpp": "col_buffer"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "colors",
+    "to": "palette",
+    "kind": "property",
+    "cpp": "colors"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_bmp",
+    "to": "demonBitmap",
+    "kind": "property",
+    "cpp": "demon_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "back_bmp",
+    "to": "backBitmap",
+    "kind": "property",
+    "cpp": "back_bmp"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_smoke",
+    "to": "smokeCount",
+    "kind": "property",
+    "cpp": "n_smoke"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "smoke_x",
+    "to": "smokeX",
+    "kind": "property",
+    "cpp": "smoke_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "smoke_y",
+    "to": "smokeY",
+    "kind": "property",
+    "cpp": "smoke_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "smoke_t",
+    "to": "smokeT",
+    "kind": "property",
+    "cpp": "smoke_t"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demonback_state",
+    "to": "demonBackState",
+    "kind": "property",
+    "cpp": "demonback_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_max_life",
+    "to": "demonMaxLife",
+    "kind": "property",
+    "cpp": "demon_max_life"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_music",
+    "to": "demonMusic",
+    "kind": "property",
+    "cpp": "demon_music"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "STATE",
+    "to": "state",
+    "kind": "property",
+    "cpp": "STATE"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "SUBSTATE",
+    "to": "subState",
+    "kind": "property",
+    "cpp": "SUBSTATE"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "OLDSTATE",
+    "to": "oldState",
+    "kind": "property",
+    "cpp": "OLDSTATE"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "MENUOPTION",
+    "to": "menuOption",
+    "kind": "property",
+    "cpp": "MENUOPTION"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "developer_start_x",
+    "to": "devStartX",
+    "kind": "property",
+    "cpp": "developer_start_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "developer_start_y",
+    "to": "devStartY",
+    "kind": "property",
+    "cpp": "developer_start_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "developer_start_map",
+    "to": "devStartWorld",
+    "kind": "property",
+    "cpp": "developer_start_map"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "inter_screen",
+    "to": "interScreen",
+    "kind": "property",
+    "cpp": "inter_screen"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "frame_counter",
+    "to": "frameCounter",
+    "kind": "property",
+    "cpp": "frame_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pause_flag",
+    "to": "pauseFlag",
+    "kind": "property",
+    "cpp": "pause_flag"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pause_state",
+    "to": "pauseState",
+    "kind": "property",
+    "cpp": "pause_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "map",
+    "to": "world",
+    "kind": "property",
+    "cpp": "map"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "map_x",
+    "to": "roomX",
+    "kind": "property",
+    "cpp": "map_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "map_y",
+    "to": "roomY",
+    "kind": "property",
+    "cpp": "map_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_x",
+    "to": "playerX",
+    "kind": "property",
+    "cpp": "pers_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_y",
+    "to": "playerY",
+    "kind": "property",
+    "cpp": "pers_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_pos",
+    "to": "playerFrame",
+    "kind": "property",
+    "cpp": "pers_pos"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_right",
+    "to": "facingRight",
+    "kind": "property",
+    "cpp": "pers_right"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_state",
+    "to": "playerState",
+    "kind": "property",
+    "cpp": "pers_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_substate",
+    "to": "playerSubState",
+    "kind": "property",
+    "cpp": "pers_substate"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pers_walk_state",
+    "to": "walkState",
+    "kind": "property",
+    "cpp": "pers_walk_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "jump_inertia",
+    "to": "jumpInertia",
+    "kind": "property",
+    "cpp": "jump_inertia"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "old_sword",
+    "to": "oldSword",
+    "kind": "property",
+    "cpp": "old_sword"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "sword_x",
+    "to": "swordX",
+    "kind": "property",
+    "cpp": "sword_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "sword_y",
+    "to": "swordY",
+    "kind": "property",
+    "cpp": "sword_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "sword_time",
+    "to": "swordTime",
+    "kind": "property",
+    "cpp": "sword_time"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "in_ladder",
+    "to": "onLadder",
+    "kind": "property",
+    "cpp": "in_ladder"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "previous_x_collision",
+    "to": "previousXCollision",
+    "kind": "property",
+    "cpp": "previous_x_collision"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "previous_y_collision",
+    "to": "previousYCollision",
+    "kind": "property",
+    "cpp": "previous_y_collision"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "hit_time",
+    "to": "hitTime",
+    "kind": "property",
+    "cpp": "hit_time"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "live_character",
+    "to": "characterAlive",
+    "kind": "property",
+    "cpp": "live_character"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "can_revive_character",
+    "to": "canRevive",
+    "kind": "property",
+    "cpp": "can_revive_character"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "current_weapon",
+    "to": "currentWeapon",
+    "kind": "property",
+    "cpp": "current_weapon"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_fired_arrows",
+    "to": "firedArrows",
+    "kind": "property",
+    "cpp": "n_fired_arrows"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_fired_mines",
+    "to": "firedMines",
+    "kind": "property",
+    "cpp": "n_fired_mines"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "in_door",
+    "to": "inDoor",
+    "kind": "property",
+    "cpp": "in_door"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "freezed",
+    "to": "frozen",
+    "kind": "property",
+    "cpp": "freezed"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "in_water",
+    "to": "inWater",
+    "kind": "property",
+    "cpp": "in_water"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "in_lava",
+    "to": "inLava",
+    "kind": "property",
+    "cpp": "in_lava"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "water_counter",
+    "to": "waterCounter",
+    "kind": "property",
+    "cpp": "water_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lava_counter",
+    "to": "lavaCounter",
+    "kind": "property",
+    "cpp": "lava_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "mine_stepped",
+    "to": "mineStepped",
+    "kind": "property",
+    "cpp": "mine_stepped"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "item",
+    "to": "items",
+    "kind": "property",
+    "cpp": "item"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world_item",
+    "to": "worldItems",
+    "kind": "property",
+    "cpp": "world_item"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "cross",
+    "to": "hasCross",
+    "kind": "property",
+    "cpp": "cross"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world_key",
+    "to": "hasWorldKey",
+    "kind": "property",
+    "cpp": "world_key"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "next_world",
+    "to": "nextWorld",
+    "kind": "property",
+    "cpp": "next_world"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world_doors_open",
+    "to": "worldDoorsOpen",
+    "kind": "property",
+    "cpp": "world_doors_open"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world_key_item",
+    "to": "worldKeyItem",
+    "kind": "property",
+    "cpp": "world_key_item"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "to_enter_cut",
+    "to": "enterCut",
+    "kind": "property",
+    "cpp": "to_enter_cut"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "currently_selecting",
+    "to": "selecting",
+    "kind": "property",
+    "cpp": "currently_selecting"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "shop_item",
+    "to": "shopItems",
+    "kind": "property",
+    "cpp": "shop_item"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "passage_state",
+    "to": "passageState",
+    "kind": "property",
+    "cpp": "passage_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "old_keyboard",
+    "to": "oldKeyboard",
+    "kind": "property",
+    "cpp": "old_keyboard"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "stone_hit_counter",
+    "to": "stoneHitCounter",
+    "kind": "property",
+    "cpp": "stone_hit_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bible_counter",
+    "to": "bibleCounter",
+    "kind": "property",
+    "cpp": "bible_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bible_subcounter",
+    "to": "bibleSubcounter",
+    "kind": "property",
+    "cpp": "bible_subcounter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "ZEUS_password",
+    "to": "zeusPassword",
+    "kind": "property",
+    "cpp": "ZEUS_password"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "ZEUS_used",
+    "to": "zeusUsed",
+    "kind": "property",
+    "cpp": "ZEUS_used"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_slimes",
+    "to": "roomSlimes",
+    "kind": "property",
+    "cpp": "room_slimes"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_waterdragons",
+    "to": "roomWaterdragons",
+    "kind": "property",
+    "cpp": "room_waterdragons"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_reddragon",
+    "to": "roomReddragon",
+    "kind": "property",
+    "cpp": "room_reddragon"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "slime_counter",
+    "to": "slimeCounter",
+    "kind": "property",
+    "cpp": "slime_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_watermonster",
+    "to": "roomWatermonster",
+    "kind": "property",
+    "cpp": "room_watermonster"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_fallingstones",
+    "to": "roomFallingstones",
+    "kind": "property",
+    "cpp": "room_fallingstones"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_rollingstones",
+    "to": "roomRollingstones",
+    "kind": "property",
+    "cpp": "room_rollingstones"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "stones_counter",
+    "to": "stonesCounter",
+    "kind": "property",
+    "cpp": "stones_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_blobs",
+    "to": "roomBlobs",
+    "kind": "property",
+    "cpp": "room_blobs"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_demonroom",
+    "to": "roomDemonroom",
+    "kind": "property",
+    "cpp": "room_demonroom"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "old_room_demonroom",
+    "to": "oldRoomDemonroom",
+    "kind": "property",
+    "cpp": "old_room_demonroom"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world5_room44_state",
+    "to": "world5Room44State",
+    "kind": "property",
+    "cpp": "world5_room44_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world5_room44_state2",
+    "to": "world5Room44State2",
+    "kind": "property",
+    "cpp": "world5_room44_state2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world5_room44_state3",
+    "to": "world5Room44State3",
+    "kind": "property",
+    "cpp": "world5_room44_state3"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world5_room64_state",
+    "to": "world5Room64State",
+    "kind": "property",
+    "cpp": "world5_room64_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world6_room35_state",
+    "to": "world6Room35State",
+    "kind": "property",
+    "cpp": "world6_room35_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world7_room12_state",
+    "to": "world7Room12State",
+    "kind": "property",
+    "cpp": "world7_room12_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world8_room12_state",
+    "to": "world8Room12State",
+    "kind": "property",
+    "cpp": "world8_room12_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room26_state",
+    "to": "room26State",
+    "kind": "property",
+    "cpp": "room26_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room56_state",
+    "to": "room56State",
+    "kind": "property",
+    "cpp": "room56_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_bfly",
+    "to": "roomBfly",
+    "kind": "property",
+    "cpp": "room_bfly"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_fairy",
+    "to": "roomFairy",
+    "kind": "property",
+    "cpp": "room_fairy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_appearwall",
+    "to": "roomAppearwall",
+    "kind": "property",
+    "cpp": "room_appearwall"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_appearwall_x",
+    "to": "roomAppearwallX",
+    "kind": "property",
+    "cpp": "room_appearwall_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_appearwall_y",
+    "to": "roomAppearwallY",
+    "kind": "property",
+    "cpp": "room_appearwall_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "appearwall_record_x",
+    "to": "appearwallRecordX",
+    "kind": "property",
+    "cpp": "appearwall_record_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "appearwall_record_y",
+    "to": "appearwallRecordY",
+    "kind": "property",
+    "cpp": "appearwall_record_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "fairy_x",
+    "to": "fairyX",
+    "kind": "property",
+    "cpp": "fairy_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "fairy_y",
+    "to": "fairyY",
+    "kind": "property",
+    "cpp": "fairy_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "fighting_demon",
+    "to": "fightingDemon",
+    "kind": "property",
+    "cpp": "fighting_demon"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "watermonster_state",
+    "to": "watermonsterState",
+    "kind": "property",
+    "cpp": "watermonster_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world3_room06_counter",
+    "to": "world3Room06Counter",
+    "kind": "property",
+    "cpp": "world3_room06_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world4_state",
+    "to": "world4State",
+    "kind": "property",
+    "cpp": "world4_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world10_door_x",
+    "to": "world10DoorX",
+    "kind": "property",
+    "cpp": "world10_door_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "world10_door_y",
+    "to": "world10DoorY",
+    "kind": "property",
+    "cpp": "world10_door_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_lava",
+    "to": "roomLava",
+    "kind": "property",
+    "cpp": "room_lava"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lava_state",
+    "to": "lavaState",
+    "kind": "property",
+    "cpp": "lava_state"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_piranhas",
+    "to": "roomPiranhas",
+    "kind": "property",
+    "cpp": "room_piranhas"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "piranhas_counter",
+    "to": "piranhasCounter",
+    "kind": "property",
+    "cpp": "piranhas_counter"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_birds",
+    "to": "roomBirds",
+    "kind": "property",
+    "cpp": "room_birds"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_arrows",
+    "to": "arrows",
+    "kind": "property",
+    "cpp": "n_arrows"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_coins",
+    "to": "coins",
+    "kind": "property",
+    "cpp": "n_coins"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_keys",
+    "to": "keys",
+    "kind": "property",
+    "cpp": "n_keys"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "player_energy",
+    "to": "energy",
+    "kind": "property",
+    "cpp": "player_energy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "player_experience",
+    "to": "experience",
+    "kind": "property",
+    "cpp": "player_experience"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "player_max",
+    "to": "maxEnergy",
+    "kind": "property",
+    "cpp": "player_max"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "player_denergy",
+    "to": "shownEnergy",
+    "kind": "property",
+    "cpp": "player_denergy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "player_dexperience",
+    "to": "shownExperience",
+    "kind": "property",
+    "cpp": "player_dexperience"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_size_x",
+    "to": "roomWidth",
+    "kind": "property",
+    "cpp": "room_size_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_size_y",
+    "to": "roomHeight",
+    "kind": "property",
+    "cpp": "room_size_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "room_tiles",
+    "to": "roomTiles",
+    "kind": "property",
+    "cpp": "room_tiles"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "jumping_from_elevator",
+    "to": "jumpingFromElevator",
+    "kind": "property",
+    "cpp": "jumping_from_elevator"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "character_over_vertical_lever",
+    "to": "characterOverVerticalLever",
+    "kind": "property",
+    "cpp": "character_over_vertical_lever"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "object",
+    "to": "objects",
+    "kind": "property",
+    "cpp": "object"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "n_objects",
+    "to": "objectCount",
+    "kind": "property",
+    "cpp": "n_objects"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "wall_tile",
+    "to": "wallTile",
+    "kind": "property",
+    "cpp": "wall_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "stone_tile",
+    "to": "stoneTile",
+    "kind": "property",
+    "cpp": "stone_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "ladder_tile",
+    "to": "ladderTile",
+    "kind": "property",
+    "cpp": "ladder_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "wdoor_tile",
+    "to": "wdoorTile",
+    "kind": "property",
+    "cpp": "wdoor_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "keydoor_tile",
+    "to": "keydoorTile",
+    "kind": "property",
+    "cpp": "keydoor_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "stats_tile",
+    "to": "statsTile",
+    "kind": "property",
+    "cpp": "stats_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "coin_tile",
+    "to": "coinTile",
+    "kind": "property",
+    "cpp": "coin_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "arrow_tile",
+    "to": "arrowTile",
+    "kind": "property",
+    "cpp": "arrow_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "key_tile",
+    "to": "keyTile",
+    "kind": "property",
+    "cpp": "key_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "door_tile",
+    "to": "doorTile",
+    "kind": "property",
+    "cpp": "door_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "character_tile",
+    "to": "characterTile",
+    "kind": "property",
+    "cpp": "character_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "character_tile_inv",
+    "to": "characterTileInv",
+    "kind": "property",
+    "cpp": "character_tile_inv"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "colision_tile",
+    "to": "collisionTile",
+    "kind": "property",
+    "cpp": "colision_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pause_tile",
+    "to": "pauseTile",
+    "kind": "property",
+    "cpp": "pause_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "sword_tile",
+    "to": "swordTile",
+    "kind": "property",
+    "cpp": "sword_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "explosion_tile",
+    "to": "explosionTile",
+    "kind": "property",
+    "cpp": "explosion_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "worm_tile",
+    "to": "wormTile",
+    "kind": "property",
+    "cpp": "worm_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bat_tile",
+    "to": "batTile",
+    "kind": "property",
+    "cpp": "bat_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "skeleton_tile",
+    "to": "skeletonTile",
+    "kind": "property",
+    "cpp": "skeleton_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "smoke_tile",
+    "to": "smokeTile",
+    "kind": "property",
+    "cpp": "smoke_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "slime_tile",
+    "to": "slimeTile",
+    "kind": "property",
+    "cpp": "slime_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bouncingball_tile",
+    "to": "bouncingballTile",
+    "kind": "property",
+    "cpp": "bouncingball_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "watermonster_tile",
+    "to": "watermonsterTile",
+    "kind": "property",
+    "cpp": "watermonster_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "jumpingbush_tile",
+    "to": "jumpingbushTile",
+    "kind": "property",
+    "cpp": "jumpingbush_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bluespider_tile",
+    "to": "bluespiderTile",
+    "kind": "property",
+    "cpp": "bluespider_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "whitefireball_tile",
+    "to": "whitefireballTile",
+    "kind": "property",
+    "cpp": "whitefireball_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "fstone_tile",
+    "to": "fstoneTile",
+    "kind": "property",
+    "cpp": "fstone_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "knight_tile",
+    "to": "knightTile",
+    "kind": "property",
+    "cpp": "knight_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "blob_tile",
+    "to": "blobTile",
+    "kind": "property",
+    "cpp": "blob_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bambu_tile",
+    "to": "bambuTile",
+    "kind": "property",
+    "cpp": "bambu_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "fairy_tile",
+    "to": "fairyTile",
+    "kind": "property",
+    "cpp": "fairy_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "porcupine_tile",
+    "to": "porcupineTile",
+    "kind": "property",
+    "cpp": "porcupine_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "items_tile",
+    "to": "itemsTile",
+    "kind": "property",
+    "cpp": "items_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "armas_tile",
+    "to": "weaponsTile",
+    "kind": "property",
+    "cpp": "armas_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "tomb_tile",
+    "to": "tombTile",
+    "kind": "property",
+    "cpp": "tomb_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "wkeydoor_tile",
+    "to": "wkeydoorTile",
+    "kind": "property",
+    "cpp": "wkeydoor_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "wnokeydoor_tile",
+    "to": "wnokeydoorTile",
+    "kind": "property",
+    "cpp": "wnokeydoor_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "black_tile",
+    "to": "blackTile",
+    "kind": "property",
+    "cpp": "black_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "witch_tile",
+    "to": "witchTile",
+    "kind": "property",
+    "cpp": "witch_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "whitebear_tile",
+    "to": "whitebearTile",
+    "kind": "property",
+    "cpp": "whitebear_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "feet_tile",
+    "to": "feetTile",
+    "kind": "property",
+    "cpp": "feet_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "redjumper_tile",
+    "to": "redjumperTile",
+    "kind": "property",
+    "cpp": "redjumper_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "livingwall_tile",
+    "to": "livingwallTile",
+    "kind": "property",
+    "cpp": "livingwall_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_tile",
+    "to": "leverTile",
+    "kind": "property",
+    "cpp": "lever_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "megabat_tile",
+    "to": "megabatTile",
+    "kind": "property",
+    "cpp": "megabat_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lava_tile",
+    "to": "lavaTile",
+    "kind": "property",
+    "cpp": "lava_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "piranha_tile",
+    "to": "piranhaTile",
+    "kind": "property",
+    "cpp": "piranha_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "whitestar_tile",
+    "to": "whitestarTile",
+    "kind": "property",
+    "cpp": "whitestar_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demonsign_tile",
+    "to": "demonsignTile",
+    "kind": "property",
+    "cpp": "demonsign_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lupa_tile",
+    "to": "magnifierTile",
+    "kind": "property",
+    "cpp": "lupa_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demonsmoke_tile",
+    "to": "demonsmokeTile",
+    "kind": "property",
+    "cpp": "demonsmoke_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_tile",
+    "to": "demonTile",
+    "kind": "property",
+    "cpp": "demon_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "spider_tile",
+    "to": "spiderTile",
+    "kind": "property",
+    "cpp": "spider_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "knighthead_tile",
+    "to": "knightheadTile",
+    "kind": "property",
+    "cpp": "knighthead_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "chicken_tile",
+    "to": "chickenTile",
+    "kind": "property",
+    "cpp": "chicken_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "rockman_tile",
+    "to": "rockmanTile",
+    "kind": "property",
+    "cpp": "rockman_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "cloud_tile",
+    "to": "cloudTile",
+    "kind": "property",
+    "cpp": "cloud_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bfly_tile",
+    "to": "bflyTile",
+    "kind": "property",
+    "cpp": "bfly_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "armourarrow_tile",
+    "to": "armourarrowTile",
+    "kind": "property",
+    "cpp": "armourarrow_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "ghost_tile",
+    "to": "ghostTile",
+    "kind": "property",
+    "cpp": "ghost_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "head_tile",
+    "to": "headTile",
+    "kind": "property",
+    "cpp": "head_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "worm2_tile",
+    "to": "worm2Tile",
+    "kind": "property",
+    "cpp": "worm2_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "octopus_tile",
+    "to": "octopusTile",
+    "kind": "property",
+    "cpp": "octopus_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "hairy_tile",
+    "to": "hairyTile",
+    "kind": "property",
+    "cpp": "hairy_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "waterdragon_tile",
+    "to": "waterdragonTile",
+    "kind": "property",
+    "cpp": "waterdragon_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "waterbug_tile",
+    "to": "waterbugTile",
+    "kind": "property",
+    "cpp": "waterbug_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bird_tile",
+    "to": "birdTile",
+    "kind": "property",
+    "cpp": "bird_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "stoneman_tile",
+    "to": "stonemanTile",
+    "kind": "property",
+    "cpp": "stoneman_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pacman_tile",
+    "to": "pacmanTile",
+    "kind": "property",
+    "cpp": "pacman_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "reddragon_tile",
+    "to": "reddragonTile",
+    "kind": "property",
+    "cpp": "reddragon_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_obj",
+    "to": "demonObject",
+    "kind": "property",
+    "cpp": "demon_obj"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "demon_obj2",
+    "to": "demonObject2",
+    "kind": "property",
+    "cpp": "demon_obj2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "owl_tile",
+    "to": "owlTile",
+    "kind": "property",
+    "cpp": "owl_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "greenmonkey_tile",
+    "to": "greenmonkeyTile",
+    "kind": "property",
+    "cpp": "greenmonkey_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "plant_tile",
+    "to": "plantTile",
+    "kind": "property",
+    "cpp": "plant_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "transformer_tile",
+    "to": "transformerTile",
+    "kind": "property",
+    "cpp": "transformer_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "flame_tile",
+    "to": "flameTile",
+    "kind": "property",
+    "cpp": "flame_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "witch2_tile",
+    "to": "witch2Tile",
+    "kind": "property",
+    "cpp": "witch2_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "cyclops_tile",
+    "to": "cyclopsTile",
+    "kind": "property",
+    "cpp": "cyclops_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lcloud_tile",
+    "to": "lcloudTile",
+    "kind": "property",
+    "cpp": "lcloud_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "glizard_tile",
+    "to": "glizardTile",
+    "kind": "property",
+    "cpp": "glizard_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "snake_tile",
+    "to": "snakeTile",
+    "kind": "property",
+    "cpp": "snake_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "bdemon_tile",
+    "to": "bdemonTile",
+    "kind": "property",
+    "cpp": "bdemon_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "gorilla_tile",
+    "to": "gorillaTile",
+    "kind": "property",
+    "cpp": "gorilla_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "pamperseball_tile",
+    "to": "pamperseballTile",
+    "kind": "property",
+    "cpp": "pamperseball_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_room_x",
+    "to": "leverRoomX",
+    "kind": "property",
+    "cpp": "lever_room_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_room_y",
+    "to": "leverRoomY",
+    "kind": "property",
+    "cpp": "lever_room_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_x",
+    "to": "leverX",
+    "kind": "property",
+    "cpp": "lever_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_y",
+    "to": "leverY",
+    "kind": "property",
+    "cpp": "lever_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_drx",
+    "to": "leverDrx",
+    "kind": "property",
+    "cpp": "lever_drx"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_dry",
+    "to": "leverDry",
+    "kind": "property",
+    "cpp": "lever_dry"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_dx",
+    "to": "leverDx",
+    "kind": "property",
+    "cpp": "lever_dx"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_dy",
+    "to": "leverDy",
+    "kind": "property",
+    "cpp": "lever_dy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "lever_going_to",
+    "to": "leverGoingTo",
+    "kind": "property",
+    "cpp": "lever_going_to"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "worm_state_tile",
+    "to": "wormStateTile",
+    "kind": "property",
+    "cpp": "worm_state_tile"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "worm_state_tile_i",
+    "to": "wormStateTileI",
+    "kind": "property",
+    "cpp": "worm_state_tile_i"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "worm_state_y",
+    "to": "wormStateY",
+    "kind": "property",
+    "cpp": "worm_state_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "HP_room_x",
+    "to": "memRoomX",
+    "kind": "property",
+    "cpp": "HP_room_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "HP_room_y",
+    "to": "memRoomY",
+    "kind": "property",
+    "cpp": "HP_room_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "HP_obj",
+    "to": "memObject",
+    "kind": "property",
+    "cpp": "HP_obj"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "HP_obj_type",
+    "to": "memObjectType",
+    "kind": "property",
+    "cpp": "HP_obj_type"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "HP_obj_aux",
+    "to": "memObjectAux",
+    "kind": "property",
+    "cpp": "HP_obj_aux"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_pause",
+    "to": "sfxPause",
+    "kind": "property",
+    "cpp": "S_pause"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_death",
+    "to": "sfxDeath",
+    "kind": "property",
+    "cpp": "S_death"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_gameover",
+    "to": "sfxGameover",
+    "kind": "property",
+    "cpp": "S_gameover"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_worldkey",
+    "to": "sfxWorldkey",
+    "kind": "property",
+    "cpp": "S_worldkey"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_entering",
+    "to": "sfxEntering",
+    "kind": "property",
+    "cpp": "S_entering"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_gamestart",
+    "to": "sfxGamestart",
+    "kind": "property",
+    "cpp": "S_gamestart"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_jump",
+    "to": "sfxJump",
+    "kind": "property",
+    "cpp": "S_jump"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_sword",
+    "to": "sfxSword",
+    "kind": "property",
+    "cpp": "S_sword"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_swordhit",
+    "to": "sfxSwordhit",
+    "kind": "property",
+    "cpp": "S_swordhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_item",
+    "to": "sfxItem",
+    "kind": "property",
+    "cpp": "S_item"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_ah",
+    "to": "sfxAh",
+    "kind": "property",
+    "cpp": "S_ah"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_ah2",
+    "to": "sfxAh2",
+    "kind": "property",
+    "cpp": "S_ah2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_powerup",
+    "to": "sfxPowerup",
+    "kind": "property",
+    "cpp": "S_powerup"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_enemyhit",
+    "to": "sfxEnemyhit",
+    "kind": "property",
+    "cpp": "S_enemyhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_door",
+    "to": "sfxDoor",
+    "kind": "property",
+    "cpp": "S_door"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_enemykill",
+    "to": "sfxEnemykill",
+    "kind": "property",
+    "cpp": "S_enemykill"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_ladderdisapear",
+    "to": "sfxLadderdisapear",
+    "kind": "property",
+    "cpp": "S_ladderdisapear"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_armourhit",
+    "to": "sfxArmourhit",
+    "kind": "property",
+    "cpp": "S_armourhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_enterwater",
+    "to": "sfxEnterwater",
+    "kind": "property",
+    "cpp": "S_enterwater"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_select",
+    "to": "sfxSelect",
+    "kind": "property",
+    "cpp": "S_select"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_firearrow",
+    "to": "sfxFirearrow",
+    "kind": "property",
+    "cpp": "S_firearrow"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_firearrow2",
+    "to": "sfxFirearrow2",
+    "kind": "property",
+    "cpp": "S_firearrow2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_waterhit",
+    "to": "sfxWaterhit",
+    "kind": "property",
+    "cpp": "S_waterhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_fall",
+    "to": "sfxFall",
+    "kind": "property",
+    "cpp": "S_fall"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_nocoins",
+    "to": "sfxNocoins",
+    "kind": "property",
+    "cpp": "S_nocoins"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_stones",
+    "to": "sfxStones",
+    "kind": "property",
+    "cpp": "S_stones"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_blob",
+    "to": "sfxBlob",
+    "kind": "property",
+    "cpp": "S_blob"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_shield",
+    "to": "sfxShield",
+    "kind": "property",
+    "cpp": "S_shield"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_bell",
+    "to": "sfxBell",
+    "kind": "property",
+    "cpp": "S_bell"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_lavahit",
+    "to": "sfxLavahit",
+    "kind": "property",
+    "cpp": "S_lavahit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_flapwings",
+    "to": "sfxFlapwings",
+    "kind": "property",
+    "cpp": "S_flapwings"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_rotatedoor",
+    "to": "sfxRotatedoor",
+    "kind": "property",
+    "cpp": "S_rotatedoor"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon2ball",
+    "to": "sfxDemon2ball",
+    "kind": "property",
+    "cpp": "S_demon2ball"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_appearing",
+    "to": "sfxAppearing",
+    "kind": "property",
+    "cpp": "S_appearing"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_firebreath",
+    "to": "sfxFirebreath",
+    "kind": "property",
+    "cpp": "S_firebreath"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_F1",
+    "to": "sfxF1",
+    "kind": "property",
+    "cpp": "S_F1"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_karrow",
+    "to": "sfxKarrow",
+    "kind": "property",
+    "cpp": "S_karrow"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_jumptree",
+    "to": "sfxJumptree",
+    "kind": "property",
+    "cpp": "S_jumptree"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_skeletonhit",
+    "to": "sfxSkeletonhit",
+    "kind": "property",
+    "cpp": "S_skeletonhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_enemybullet",
+    "to": "sfxEnemybullet",
+    "kind": "property",
+    "cpp": "S_enemybullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_headbullet",
+    "to": "sfxHeadbullet",
+    "kind": "property",
+    "cpp": "S_headbullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_dropmine",
+    "to": "sfxDropmine",
+    "kind": "property",
+    "cpp": "S_dropmine"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_firefire",
+    "to": "sfxFirefire",
+    "kind": "property",
+    "cpp": "S_firefire"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_fireball",
+    "to": "sfxFireball",
+    "kind": "property",
+    "cpp": "S_fireball"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_fireball2",
+    "to": "sfxFireball2",
+    "kind": "property",
+    "cpp": "S_fireball2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_wdoor",
+    "to": "sfxWdoor",
+    "kind": "property",
+    "cpp": "S_wdoor"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_door2",
+    "to": "sfxDoor2",
+    "kind": "property",
+    "cpp": "S_door2"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demonhit",
+    "to": "sfxDemonhit",
+    "kind": "property",
+    "cpp": "S_demonhit"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_bearbullet",
+    "to": "sfxBearbullet",
+    "kind": "property",
+    "cpp": "S_bearbullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_chickenbomb",
+    "to": "sfxChickenbomb",
+    "kind": "property",
+    "cpp": "S_chickenbomb"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_colormonster",
+    "to": "sfxColormonster",
+    "kind": "property",
+    "cpp": "S_colormonster"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_waterstone",
+    "to": "sfxWaterstone",
+    "kind": "property",
+    "cpp": "S_waterstone"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon4jump",
+    "to": "sfxDemon4jump",
+    "kind": "property",
+    "cpp": "S_demon4jump"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_rockman",
+    "to": "sfxRockman",
+    "kind": "property",
+    "cpp": "S_rockman"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_mine",
+    "to": "sfxMine",
+    "kind": "property",
+    "cpp": "S_mine"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_bible",
+    "to": "sfxBible",
+    "kind": "property",
+    "cpp": "S_bible"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon1jump",
+    "to": "sfxDemon1jump",
+    "kind": "property",
+    "cpp": "S_demon1jump"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon1bones",
+    "to": "sfxDemon1bones",
+    "kind": "property",
+    "cpp": "S_demon1bones"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_owl",
+    "to": "sfxOwl",
+    "kind": "property",
+    "cpp": "S_owl"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon7bullet",
+    "to": "sfxDemon7bullet",
+    "kind": "property",
+    "cpp": "S_demon7bullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_demon8bullet",
+    "to": "sfxDemon8bullet",
+    "kind": "property",
+    "cpp": "S_demon8bullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_flamebullet",
+    "to": "sfxFlamebullet",
+    "kind": "property",
+    "cpp": "S_flamebullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_snakebullet",
+    "to": "sfxSnakebullet",
+    "kind": "property",
+    "cpp": "S_snakebullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_gorilla",
+    "to": "sfxGorilla",
+    "kind": "property",
+    "cpp": "S_gorilla"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_lizardtongue",
+    "to": "sfxLizardtongue",
+    "kind": "property",
+    "cpp": "S_lizardtongue"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_bdemonbullet",
+    "to": "sfxBdemonbullet",
+    "kind": "property",
+    "cpp": "S_bdemonbullet"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "S_lightning",
+    "to": "sfxLightning",
+    "kind": "property",
+    "cpp": "S_lightning"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "music_volume",
+    "to": "musicVolume",
+    "kind": "property",
+    "cpp": "music_volume"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "sfx_volume",
+    "to": "sfxVolume",
+    "kind": "property",
+    "cpp": "sfx_volume"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "logic_dx",
+    "to": "logicDx",
+    "kind": "property",
+    "cpp": "logic_dx"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "logic_dy",
+    "to": "logicDy",
+    "kind": "property",
+    "cpp": "logic_dy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "logic_x",
+    "to": "logicX",
+    "kind": "property",
+    "cpp": "logic_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "logic_y",
+    "to": "logicY",
+    "kind": "property",
+    "cpp": "logic_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "physic_dx",
+    "to": "physicDx",
+    "kind": "property",
+    "cpp": "physic_dx"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "physic_dy",
+    "to": "physicDy",
+    "kind": "property",
+    "cpp": "physic_dy"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "physic_x",
+    "to": "physicX",
+    "kind": "property",
+    "cpp": "physic_x"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "physic_y",
+    "to": "physicY",
+    "kind": "property",
+    "cpp": "physic_y"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "UP_KEY",
+    "to": "keyUp",
+    "kind": "property",
+    "cpp": "UP_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "DOWN_KEY",
+    "to": "keyDown",
+    "kind": "property",
+    "cpp": "DOWN_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "LEFT_KEY",
+    "to": "keyLeft",
+    "kind": "property",
+    "cpp": "LEFT_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "RIGHT_KEY",
+    "to": "keyRight",
+    "kind": "property",
+    "cpp": "RIGHT_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "SWORD_KEY",
+    "to": "keySword",
+    "kind": "property",
+    "cpp": "SWORD_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "WEAPON_KEY",
+    "to": "keyWeapon",
+    "kind": "property",
+    "cpp": "WEAPON_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "ITEM_KEY",
+    "to": "keyItem",
+    "kind": "property",
+    "cpp": "ITEM_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "PAUSE_KEY",
+    "to": "keyPause",
+    "kind": "property",
+    "cpp": "PAUSE_KEY"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "last_word",
+    "to": "typedKeys",
+    "kind": "property",
+    "cpp": "last_word"
+  },
+  {
+    "file": "src/game/state.ts",
+    "name": "password_pos",
+    "to": "passwordPos",
+    "kind": "property",
+    "cpp": "password_pos"
+  },
+  {
+    "file": "src/game/gamecycle.ts",
+    "name": "GameCycle",
+    "to": "gameCycle",
+    "kind": "function",
+    "cpp": "GameCycle"
+  },
+  {
+    "file": "src/game/gamecycle.ts",
+    "name": "drawcharacter",
+    "to": "drawCharacter",
+    "kind": "function",
+    "cpp": "drawcharacter"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "ActualizeLevers",
+    "to": "updateLevers",
+    "kind": "function",
+    "cpp": "ActualizeLevers"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "GameTestInteractions",
+    "to": "testInteractions",
+    "kind": "function",
+    "cpp": "GameTestInteractions"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "GameRoomEvents",
+    "to": "roomEvents",
+    "kind": "function",
+    "cpp": "GameRoomEvents"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "fire_arrow",
+    "to": "fireWeapon",
+    "kind": "function",
+    "cpp": "fire_arrow"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "test_if_weapon_colision",
+    "to": "weaponCollision",
+    "kind": "function",
+    "cpp": "test_if_weapon_colision"
+  },
+  {
+    "file": "src/game/gameinteractions.ts",
+    "name": "tile_anims",
+    "to": "animateTiles",
+    "kind": "function",
+    "cpp": "tile_anims"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "ReleaseGraphics",
+    "to": "releaseGraphics",
+    "kind": "function",
+    "cpp": "ReleaseGraphics"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "SetSFXVolume",
+    "to": "setSfxVolume",
+    "kind": "function",
+    "cpp": "SetSFXVolume"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "ReleaseSound",
+    "to": "releaseSounds",
+    "kind": "function",
+    "cpp": "ReleaseSound"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "GameEnd",
+    "to": "gameEnd",
+    "kind": "function",
+    "cpp": "GameEnd"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "newgame",
+    "to": "newGame",
+    "kind": "function",
+    "cpp": "newgame"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "drawmap",
+    "to": "drawMap",
+    "kind": "function",
+    "cpp": "drawmap"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "drawstats",
+    "to": "drawStats",
+    "kind": "function",
+    "cpp": "drawstats"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "tile_print",
+    "to": "tilePrint",
+    "kind": "function",
+    "cpp": "tile_print"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "tile_print2",
+    "to": "tilePrintOpaque",
+    "kind": "function",
+    "cpp": "tile_print2"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "loadroom",
+    "to": "loadRoom",
+    "kind": "function",
+    "cpp": "loadroom"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "search_ladder",
+    "to": "findLadder",
+    "kind": "function",
+    "cpp": "search_ladder"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "add_object",
+    "to": "addObject",
+    "kind": "function",
+    "cpp": "add_object"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "guardar_configuracion",
+    "to": "saveConfig",
+    "kind": "function",
+    "cpp": "guardar_configuracion"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "cargar_configuracion",
+    "to": "loadConfig",
+    "kind": "function",
+    "cpp": "cargar_configuracion"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "configuracion_por_defecto",
+    "to": "defaultConfig",
+    "kind": "function",
+    "cpp": "configuracion_por_defecto"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "HP_objs_reset",
+    "to": "resetRoomMemory",
+    "kind": "function",
+    "cpp": "HP_objs_reset"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "HP_filter",
+    "to": "forgetDistantRooms",
+    "kind": "function",
+    "cpp": "HP_filter"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "HP_restore",
+    "to": "restoreRoomMemory",
+    "kind": "function",
+    "cpp": "HP_restore"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "HP_add_record",
+    "to": "rememberObject",
+    "kind": "function",
+    "cpp": "HP_add_record"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "HP_modify_record_aux",
+    "to": "updateRememberedObject",
+    "kind": "function",
+    "cpp": "HP_modify_record_aux"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "clear_typed_word",
+    "to": "clearTypedWord",
+    "kind": "function",
+    "cpp": "clear_typed_word"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "check_typed_word",
+    "to": "updateTypedWord",
+    "kind": "function",
+    "cpp": "check_typed_word"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "typed_word_p",
+    "to": "isWordTyped",
+    "kind": "function",
+    "cpp": "typed_word_p"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "draw_items_map",
+    "to": "drawItemsMap",
+    "kind": "function",
+    "cpp": "draw_items_map"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "iswall",
+    "to": "isWall",
+    "kind": "function",
+    "cpp": "iswall"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "iswall_or_blockingobject",
+    "to": "isWallOrBlocker",
+    "kind": "function",
+    "cpp": "iswall_or_blockingobject"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "get_palette",
+    "to": "loadPalette",
+    "kind": "function",
+    "cpp": "get_palette"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "load_bitmap",
+    "to": "loadBitmap",
+    "kind": "function",
+    "cpp": "load_bitmap"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "ReloadStuff",
+    "to": "reloadAll",
+    "kind": "function",
+    "cpp": "ReloadStuff"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "ReloadSound",
+    "to": "loadSounds",
+    "kind": "function",
+    "cpp": "ReloadSound"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "GameInit",
+    "to": "gameInit",
+    "kind": "function",
+    "cpp": "GameInit"
+  },
+  {
+    "file": "src/game/gameaux.ts",
+    "name": "init_paths",
+    "to": "initPaths",
+    "kind": "function",
+    "cpp": "init_paths"
+  },
+  {
+    "file": "src/game/ingamecycle.ts",
+    "name": "GameInGameCycle",
+    "to": "updatePlayer",
+    "kind": "function",
+    "cpp": "GameInGameCycle"
+  },
+  {
+    "file": "src/game/gametiles.ts",
+    "name": "ReloadGraphics",
+    "to": "loadGraphics",
+    "kind": "function",
+    "cpp": "ReloadGraphics"
+  },
+  {
+    "file": "src/game/shrines.ts",
+    "name": "passage_mainloop",
+    "to": "passageCycle",
+    "kind": "function",
+    "cpp": "passage_mainloop"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "redo_demonintro",
+    "to": "redoDemonIntro",
+    "kind": "function",
+    "cpp": "redo_demonintro"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon_intro",
+    "to": "demonIntro",
+    "kind": "function",
+    "cpp": "demon_intro"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "draw_demon_background",
+    "to": "drawDemonBackground",
+    "kind": "function",
+    "cpp": "draw_demon_background"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon1",
+    "to": "loadDemon1",
+    "kind": "function",
+    "cpp": "load_demon1"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon2",
+    "to": "loadDemon2",
+    "kind": "function",
+    "cpp": "load_demon2"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon3",
+    "to": "loadDemon3",
+    "kind": "function",
+    "cpp": "load_demon3"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon4",
+    "to": "loadDemon4",
+    "kind": "function",
+    "cpp": "load_demon4"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon5",
+    "to": "loadDemon5",
+    "kind": "function",
+    "cpp": "load_demon5"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon6",
+    "to": "loadDemon6",
+    "kind": "function",
+    "cpp": "load_demon6"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon7",
+    "to": "loadDemon7",
+    "kind": "function",
+    "cpp": "load_demon7"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon8",
+    "to": "loadDemon8",
+    "kind": "function",
+    "cpp": "load_demon8"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon9",
+    "to": "loadDemon9",
+    "kind": "function",
+    "cpp": "load_demon9"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "load_demon10",
+    "to": "loadDemon10",
+    "kind": "function",
+    "cpp": "load_demon10"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon1_cycle",
+    "to": "demon1Cycle",
+    "kind": "function",
+    "cpp": "demon1_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon2_cycle",
+    "to": "demon2Cycle",
+    "kind": "function",
+    "cpp": "demon2_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon3_cycle",
+    "to": "demon3Cycle",
+    "kind": "function",
+    "cpp": "demon3_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon4_cycle",
+    "to": "demon4Cycle",
+    "kind": "function",
+    "cpp": "demon4_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon5_cycle",
+    "to": "demon5Cycle",
+    "kind": "function",
+    "cpp": "demon5_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon6_cycle",
+    "to": "demon6Cycle",
+    "kind": "function",
+    "cpp": "demon6_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon7_cycle",
+    "to": "demon7Cycle",
+    "kind": "function",
+    "cpp": "demon7_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon8_cycle",
+    "to": "demon8Cycle",
+    "kind": "function",
+    "cpp": "demon8_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon9_cycle",
+    "to": "demon9Cycle",
+    "kind": "function",
+    "cpp": "demon9_cycle"
+  },
+  {
+    "file": "src/game/demons.ts",
+    "name": "demon10_cycle",
+    "to": "demon10Cycle",
+    "kind": "function",
+    "cpp": "demon10_cycle"
+  },
+  {
+    "file": "src/game/roomchange.ts",
+    "name": "RoomChange",
+    "to": "checkRoomChange",
+    "kind": "function",
+    "cpp": "RoomChange"
+  },
+  {
+    "file": "src/game/gameobjects.ts",
+    "name": "GameObjectAnimation",
+    "to": "animateObjects",
+    "kind": "function",
+    "cpp": "GameObjectAnimation"
+  },
+  {
+    "file": "src/game/passwords.ts",
+    "name": "generatepassword",
+    "to": "generatePassword",
+    "kind": "function",
+    "cpp": "generatepassword"
+  },
+  {
+    "file": "src/game/passwords.ts",
+    "name": "readpassword",
+    "to": "readPassword",
+    "kind": "function",
+    "cpp": "readpassword"
+  },
+  {
+    "file": "src/platform/keyboard.ts",
+    "name": "SDL_GetKeyboardState",
+    "to": "getKeyboardState",
+    "kind": "function",
+    "cpp": "SDL_GetKeyboardState"
+  },
+  {
+    "file": "src/platform/keyboard.ts",
+    "name": "SDL_GetKeyName",
+    "to": "keyName",
+    "kind": "function",
+    "cpp": "SDL_GetKeyName"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_play",
+    "to": "playSound",
+    "kind": "function",
+    "cpp": "Sound_play"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_create_sound",
+    "to": "createSound",
+    "kind": "function",
+    "cpp": "Sound_create_sound"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_create_music",
+    "to": "playMusic",
+    "kind": "function",
+    "cpp": "Sound_create_music"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_release_music",
+    "to": "stopMusic",
+    "kind": "function",
+    "cpp": "Sound_release_music"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_pause_music",
+    "to": "pauseMusic",
+    "kind": "function",
+    "cpp": "Sound_pause_music"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_unpause_music",
+    "to": "resumeMusic",
+    "kind": "function",
+    "cpp": "Sound_unpause_music"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Sound_temporary_release_music",
+    "to": "releaseMusicTemporarily",
+    "kind": "function",
+    "cpp": "Sound_temporary_release_music"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Delete_sound",
+    "to": "deleteSound",
+    "kind": "function",
+    "cpp": "Delete_sound"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "Mix_VolumeMusic",
+    "to": "setMusicVolume",
+    "kind": "function",
+    "cpp": "Mix_VolumeMusic"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "SetSFXVolumeRaw",
+    "to": "setSfxGain",
+    "kind": "function",
+    "cpp": "SetSFXVolumeRaw"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "music_recovery",
+    "to": "restartMusic",
+    "kind": "function",
+    "cpp": "music_recovery"
+  },
+  {
+    "file": "src/engine/drawing.ts",
+    "name": "B_rectangle",
+    "to": "fillRect",
+    "kind": "function",
+    "cpp": "B_rectangle"
+  },
+  {
+    "file": "src/engine/drawing.ts",
+    "name": "B_rectangle2",
+    "to": "strokeRect",
+    "kind": "function",
+    "cpp": "B_rectangle2"
+  },
+  {
+    "file": "src/engine/drawing.ts",
+    "name": "Line8B",
+    "to": "drawLine",
+    "kind": "function",
+    "cpp": "Line8B"
+  },
+  {
+    "file": "src/engine/drawing.ts",
+    "name": "line_clip",
+    "to": "clipLine",
+    "kind": "function",
+    "cpp": "line_clip"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "default_s_path",
+    "to": "defaultSoundPath",
+    "kind": "variable",
+    "cpp": "default_s_path"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "s_path",
+    "to": "soundPath",
+    "kind": "variable",
+    "cpp": "s_path"
+  },
+  {
+    "file": "src/platform/audio.ts",
+    "name": "SOUNDT",
+    "to": "SoundRef",
+    "kind": "class",
+    "cpp": "SOUNDT"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "get_image",
+    "to": "getPixels",
+    "kind": "member",
+    "cpp": "Bitmap::get_image"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "get_palete",
+    "to": "getPalette",
+    "kind": "member",
+    "cpp": "Bitmap::get_palete"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "get_ancho",
+    "to": "getWidth",
+    "kind": "member",
+    "cpp": "Bitmap::get_ancho"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "get_alto",
+    "to": "getHeight",
+    "kind": "member",
+    "cpp": "Bitmap::get_alto"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "ancho",
+    "to": "width",
+    "kind": "member",
+    "cpp": "Bitmap::ancho"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "alto",
+    "to": "height",
+    "kind": "member",
+    "cpp": "Bitmap::alto"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "pal",
+    "to": "palette",
+    "kind": "member",
+    "cpp": "Bitmap::pal"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "draw_sprite",
+    "to": "drawSprite",
+    "kind": "member",
+    "cpp": "Bitmap::draw_sprite"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "draw_sprite_cut",
+    "to": "drawSpriteCut",
+    "kind": "member",
+    "cpp": "Bitmap::draw_sprite_cut"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "draw_sprite_mask",
+    "to": "drawSpriteMask",
+    "kind": "member",
+    "cpp": "Bitmap::draw_sprite_mask"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "coltest",
+    "to": "collisionTest",
+    "kind": "member",
+    "cpp": "Bitmap::coltest"
+  },
+  {
+    "file": "src/engine/bitmap.ts",
+    "name": "to_tile_colision",
+    "to": "overlaps",
+    "kind": "member",
+    "cpp": "Bitmap::to_tile_colision"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_src",
+    "to": "bitmap",
+    "kind": "member",
+    "cpp": "CSprite::m_src"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_x",
+    "to": "x",
+    "kind": "member",
+    "cpp": "CSprite::m_x"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_y",
+    "to": "y",
+    "kind": "member",
+    "cpp": "CSprite::m_y"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_dx",
+    "to": "w",
+    "kind": "member",
+    "cpp": "CSprite::m_dx"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_dy",
+    "to": "h",
+    "kind": "member",
+    "cpp": "CSprite::m_dy"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_xoffs",
+    "to": "offsetX",
+    "kind": "member",
+    "cpp": "CSprite::m_xoffs"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "m_yoffs",
+    "to": "offsetY",
+    "kind": "member",
+    "cpp": "CSprite::m_yoffs"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "draw_cut",
+    "to": "drawCut",
+    "kind": "member",
+    "cpp": "CSprite::draw_cut"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "drawmask",
+    "to": "drawMask",
+    "kind": "member",
+    "cpp": "CSprite::drawmask"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "coltest",
+    "to": "collisionTest",
+    "kind": "member",
+    "cpp": "CSprite::coltest"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "to_tile_colision",
+    "to": "overlaps",
+    "kind": "member",
+    "cpp": "CSprite::to_tile_colision"
+  },
+  {
+    "file": "src/engine/sprite.ts",
+    "name": "CSprite",
+    "to": "Sprite",
+    "kind": "class",
+    "cpp": "CSprite"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "m_sp",
+    "to": "sprite",
+    "kind": "member",
+    "cpp": "CTile::m_sp"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "m_type",
+    "to": "collisionType",
+    "kind": "member",
+    "cpp": "CTile::m_type"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "drawN",
+    "to": "drawNative",
+    "kind": "member",
+    "cpp": "CTile::drawN"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "draw_cut",
+    "to": "drawCut",
+    "kind": "member",
+    "cpp": "CTile::draw_cut"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "draw_only_mask",
+    "to": "drawMask",
+    "kind": "member",
+    "cpp": "CTile::draw_only_mask"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "draw_only_maskN",
+    "to": "drawMaskNative",
+    "kind": "member",
+    "cpp": "CTile::draw_only_maskN"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "draw_without_mask",
+    "to": "drawNoMask",
+    "kind": "member",
+    "cpp": "CTile::draw_without_mask"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "draw_without_maskN",
+    "to": "drawNoMaskNative",
+    "kind": "member",
+    "cpp": "CTile::draw_without_maskN"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "coltest",
+    "to": "collisionTest",
+    "kind": "member",
+    "cpp": "CTile::coltest"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "coltestN",
+    "to": "collisionTestNative",
+    "kind": "member",
+    "cpp": "CTile::coltestN"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "to_tile_colision",
+    "to": "overlaps",
+    "kind": "member",
+    "cpp": "CTile::to_tile_colision"
+  },
+  {
+    "file": "src/engine/tile.ts",
+    "name": "CTile",
+    "to": "Tile",
+    "kind": "class",
+    "cpp": "CTile"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "base_tile",
+    "to": "baseTile",
+    "kind": "member",
+    "cpp": "MOGObject::base_tile"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "last_hit",
+    "to": "lastHit",
+    "kind": "member",
+    "cpp": "MOGObject::last_hit"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "desired_floor",
+    "to": "desiredFloor",
+    "kind": "member",
+    "cpp": "MOGObject::desired_floor"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "in_ladder",
+    "to": "onLadder",
+    "kind": "member",
+    "cpp": "MOGObject::in_ladder"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "union_x",
+    "to": "unionX",
+    "kind": "member",
+    "cpp": "MOGObject::union_x"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "union_y",
+    "to": "unionY",
+    "kind": "member",
+    "cpp": "MOGObject::union_y"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "draw_x",
+    "to": "drawX",
+    "kind": "member",
+    "cpp": "MOGObject::draw_x"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "draw_y",
+    "to": "drawY",
+    "kind": "member",
+    "cpp": "MOGObject::draw_y"
+  },
+  {
+    "file": "src/game/object.ts",
+    "name": "MOGObject",
+    "to": "GameObject",
+    "kind": "class",
+    "cpp": "MOGObject"
+  },
+  {
+    "file": "src/game/enemies/types.ts",
+    "name": "colision",
+    "to": "collision",
+    "kind": "propsig",
+    "cpp": "colision (local)"
+  }
+]
