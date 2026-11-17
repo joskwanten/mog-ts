@@ -451,54 +451,54 @@ Further changes of the clean-up:
 
 ## Classes and members
 
-| C++                         | TypeScript                             |
-| --------------------------- | -------------------------------------- |
-| `SOUNDT`                    | `SoundRef` (platform/audio.ts)         |
-| `CSprite`                   | `Sprite` (engine/sprite.ts)            |
-| `CTile`                     | `Tile` (engine/tile.ts)                |
-| `MOGObject`                 | `GameObject` (game/object.ts)          |
-| `Bitmap::get_image`         | `getPixels` (engine/bitmap.ts)         |
-| `Bitmap::get_palete`        | `getPalette` (engine/bitmap.ts)        |
-| `Bitmap::get_ancho`         | `getWidth` (engine/bitmap.ts)          |
-| `Bitmap::get_alto`          | `getHeight` (engine/bitmap.ts)         |
-| `Bitmap::ancho`             | `width` (engine/bitmap.ts)             |
-| `Bitmap::alto`              | `height` (engine/bitmap.ts)            |
-| `Bitmap::pal`               | `palette` (engine/bitmap.ts)           |
-| `Bitmap::draw_sprite`       | `drawSprite` (engine/bitmap.ts)        |
-| `Bitmap::draw_sprite_cut`   | `drawSpriteCut` (engine/bitmap.ts)     |
-| `Bitmap::draw_sprite_mask`  | `drawSpriteMask` (engine/bitmap.ts)    |
-| `Bitmap::coltest`           | `collisionTest` (engine/bitmap.ts)     |
-| `Bitmap::to_tile_colision`  | `overlaps` (engine/bitmap.ts)          |
-| `CSprite::m_src`            | `bitmap` (engine/sprite.ts)            |
-| `CSprite::m_x`              | `x` (engine/sprite.ts)                 |
-| `CSprite::m_y`              | `y` (engine/sprite.ts)                 |
-| `CSprite::m_dx`             | `w` (engine/sprite.ts)                 |
-| `CSprite::m_dy`             | `h` (engine/sprite.ts)                 |
-| `CSprite::m_xoffs`          | `offsetX` (engine/sprite.ts)           |
-| `CSprite::m_yoffs`          | `offsetY` (engine/sprite.ts)           |
-| `CSprite::draw_cut`         | `drawCut` (engine/sprite.ts)           |
-| `CSprite::drawmask`         | `drawMask` (engine/sprite.ts)          |
-| `CSprite::coltest`          | `collisionTest` (engine/sprite.ts)     |
-| `CSprite::to_tile_colision` | `overlaps` (engine/sprite.ts)          |
-| `CTile::m_sp`               | `sprite` (engine/tile.ts)              |
-| `CTile::m_type`             | `collisionType` (engine/tile.ts)       |
-| `CTile::drawN`              | `drawNative` (engine/tile.ts)          |
-| `CTile::draw_cut`           | `drawCut` (engine/tile.ts)             |
-| `CTile::draw_only_mask`     | `drawMask` (engine/tile.ts)            |
-| `CTile::draw_only_maskN`    | `drawMaskNative` (engine/tile.ts)      |
-| `CTile::draw_without_mask`  | `drawNoMask` (engine/tile.ts)          |
-| `CTile::draw_without_maskN` | `drawNoMaskNative` (engine/tile.ts)    |
-| `CTile::coltest`            | `collisionTest` (engine/tile.ts)       |
-| `CTile::coltestN`           | `collisionTestNative` (engine/tile.ts) |
-| `CTile::to_tile_colision`   | `overlaps` (engine/tile.ts)            |
-| `MOGObject::base_tile`      | `baseTile` (game/object.ts)            |
-| `MOGObject::last_hit`       | `lastHit` (game/object.ts)             |
-| `MOGObject::desired_floor`  | `desiredFloor` (game/object.ts)        |
-| `MOGObject::in_ladder`      | `onLadder` (game/object.ts)            |
-| `MOGObject::union_x`        | `unionX` (game/object.ts)              |
-| `MOGObject::union_y`        | `unionY` (game/object.ts)              |
-| `MOGObject::draw_x`         | `drawX` (game/object.ts)               |
-| `MOGObject::draw_y`         | `drawY` (game/object.ts)               |
-| `default_s_path`            | `defaultSoundPath` (platform/audio.ts) |
-| `s_path`                    | `soundPath` (platform/audio.ts)        |
-| `colision (local)`          | `collision` (game/enemies/types.ts)    |
+| C++                         | TypeScript                                  |
+| --------------------------- | ------------------------------------------- |
+| `SOUNDT`                    | `SoundRef` (platform/audio.ts)              |
+| `CSprite`                   | `Sprite` (engine/sprite.ts)                 |
+| `CTile`                     | `Tile` (engine/tile.ts)                     |
+| `MOGObject`                 | `GameObject` (game/object.ts)               |
+| `Bitmap::get_image`         | `getPixels` (engine/bitmap.ts)              |
+| `Bitmap::get_palete`        | `palette` of `decodePCX` (engine/bitmap.ts) |
+| `Bitmap::get_ancho`         | `getWidth` (engine/bitmap.ts)               |
+| `Bitmap::get_alto`          | `getHeight` (engine/bitmap.ts)              |
+| `Bitmap::ancho`             | `width` (engine/bitmap.ts)                  |
+| `Bitmap::alto`              | `height` (engine/bitmap.ts)                 |
+| `Bitmap::pal`               | `palette` of `decodePCX` (engine/bitmap.ts) |
+| `Bitmap::draw_sprite`       | `drawSprite` (engine/bitmap.ts)             |
+| `Bitmap::draw_sprite_cut`   | `drawSpriteCut` (engine/bitmap.ts)          |
+| `Bitmap::draw_sprite_mask`  | `drawSpriteMask` (engine/bitmap.ts)         |
+| `Bitmap::coltest`           | `collisionTest` (engine/bitmap.ts)          |
+| `Bitmap::to_tile_colision`  | `overlaps` (engine/bitmap.ts)               |
+| `CSprite::m_src`            | `bitmap` (engine/sprite.ts)                 |
+| `CSprite::m_x`              | `x` (engine/sprite.ts)                      |
+| `CSprite::m_y`              | `y` (engine/sprite.ts)                      |
+| `CSprite::m_dx`             | `w` (engine/sprite.ts)                      |
+| `CSprite::m_dy`             | `h` (engine/sprite.ts)                      |
+| `CSprite::m_xoffs`          | `offsetX` (engine/sprite.ts)                |
+| `CSprite::m_yoffs`          | `offsetY` (engine/sprite.ts)                |
+| `CSprite::draw_cut`         | `drawCut` (engine/sprite.ts)                |
+| `CSprite::drawmask`         | `drawMask` (engine/sprite.ts)               |
+| `CSprite::coltest`          | `collisionTest` (engine/sprite.ts)          |
+| `CSprite::to_tile_colision` | `overlaps` (engine/sprite.ts)               |
+| `CTile::m_sp`               | `sprite` (engine/tile.ts)                   |
+| `CTile::m_type`             | `collisionType` (engine/tile.ts)            |
+| `CTile::drawN`              | `drawNative` (engine/tile.ts)               |
+| `CTile::draw_cut`           | `drawCut` (engine/tile.ts)                  |
+| `CTile::draw_only_mask`     | `drawMask` (engine/tile.ts)                 |
+| `CTile::draw_only_maskN`    | `drawMaskNative` (engine/tile.ts)           |
+| `CTile::draw_without_mask`  | `drawNoMask` (engine/tile.ts)               |
+| `CTile::draw_without_maskN` | `drawNoMaskNative` (engine/tile.ts)         |
+| `CTile::coltest`            | `collisionTest` (engine/tile.ts)            |
+| `CTile::coltestN`           | `collisionTestNative` (engine/tile.ts)      |
+| `CTile::to_tile_colision`   | `overlaps` (engine/tile.ts)                 |
+| `MOGObject::base_tile`      | `baseTile` (game/object.ts)                 |
+| `MOGObject::last_hit`       | `lastHit` (game/object.ts)                  |
+| `MOGObject::desired_floor`  | `desiredFloor` (game/object.ts)             |
+| `MOGObject::in_ladder`      | `onLadder` (game/object.ts)                 |
+| `MOGObject::union_x`        | `unionX` (game/object.ts)                   |
+| `MOGObject::union_y`        | `unionY` (game/object.ts)                   |
+| `MOGObject::draw_x`         | `drawX` (game/object.ts)                    |
+| `MOGObject::draw_y`         | `drawY` (game/object.ts)                    |
+| `default_s_path`            | `defaultSoundPath` (platform/audio.ts)      |
+| `s_path`                    | `soundPath` (platform/audio.ts)             |
+| `colision (local)`          | `collision` (game/enemies/types.ts)         |

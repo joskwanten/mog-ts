@@ -44,6 +44,15 @@ function takeSounds(): string {
   return s;
 }
 
+const rgb = new Uint32Array(640 * 400);
+const rgbView = new Uint8Array(rgb.buffer);
+
+/** The frame as the player sees it: opaque RGB pixels (the alpha byte is ignored, as by the video output). */
+function rgbBytes(screen: Uint32Array): Uint8Array {
+  for (let i = 0; i < screen.length; i++) rgb[i] = (screen[i] | 0xff000000) >>> 0;
+  return rgbView;
+}
+
 /** FNV-1a over a byte array. */
 function fnv(buf: Uint8Array, h = 0x811c9dc5): number {
   for (let i = 0; i < buf.length; i++) {
@@ -84,7 +93,7 @@ export function runReplay(opts: { frames: number; seed: number }): ReplayResult 
     return inputSeed;
   };
   const keys = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_m];
-  const screen = new Uint8Array(W * H);
+  const screen = new Uint32Array(W * H);
   const hashes: string[] = [];
   let teleport = 0;
 
@@ -118,7 +127,7 @@ export function runReplay(opts: { frames: number; seed: number }): ReplayResult 
 
     pollKeyboard();
     gameCycle(screen);
-    const h = fnv(G.collision ?? new Uint8Array(0), fnv(screen));
+    const h = fnv(G.collision ?? new Uint8Array(0), fnv(rgbBytes(screen)));
     hashes.push(
       `${h.toString(16).padStart(8, '0')}:${G.state}:${G.world}.${G.roomX}.${G.roomY}:${G.playerX},${G.playerY}${takeSounds()}`,
     );
@@ -190,7 +199,7 @@ export function runCoverage(opts: {
     return inputSeed;
   };
   const keys = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_m];
-  const screen = new Uint8Array(W * H);
+  const screen = new Uint32Array(W * H);
   const hashes: string[] = [];
   const step = (randomInput: boolean) => {
     for (const k of keys) setKey(k, false);
@@ -203,7 +212,7 @@ export function runCoverage(opts: {
     G.energy[1] = Math.max(G.energy[1], 8);
     pollKeyboard();
     gameCycle(screen);
-    const h = fnv(G.collision ?? new Uint8Array(0), fnv(screen));
+    const h = fnv(G.collision ?? new Uint8Array(0), fnv(rgbBytes(screen)));
     hashes.push(
       `${h.toString(16).padStart(8, '0')}:${G.state}:${G.world}.${G.roomX}.${G.roomY}:${G.playerX},${G.playerY}${takeSounds()}`,
     );
@@ -247,7 +256,7 @@ export function runCoverage(opts: {
       if (f % 3 !== 0) setKey(passageKeys[rnd() % passageKeys.length], true);
       pollKeyboard();
       gameCycle(screen);
-      const h = fnv(G.collision ?? new Uint8Array(0), fnv(screen));
+      const h = fnv(G.collision ?? new Uint8Array(0), fnv(rgbBytes(screen)));
       hashes.push(`${h.toString(16).padStart(8, '0')}:${G.state}:${G.world}.${G.roomX}.${G.roomY}${takeSounds()}`);
     }
   }
@@ -292,7 +301,7 @@ export function runPlayerMoves(opts: { seed: number; roomStep: number; starts: n
     [[SDLK_m], 2],
     [[SDLK_LEFT], 30],
   ];
-  const screen = new Uint8Array(W * H);
+  const screen = new Uint32Array(W * H);
   const hashes: string[] = [];
   const frame = () => {
     G.energy[0] = Math.max(G.energy[0], 8);
@@ -303,7 +312,7 @@ export function runPlayerMoves(opts: { seed: number; roomStep: number; starts: n
       G.state = State.Playing;
       G.subState = 1;
     }
-    const h = fnv(G.collision ?? new Uint8Array(0), fnv(screen));
+    const h = fnv(G.collision ?? new Uint8Array(0), fnv(rgbBytes(screen)));
     hashes.push(
       `${h.toString(16).padStart(8, '0')}:${G.world}.${G.roomX}.${G.roomY}:${G.playerX},${G.playerY}:${G.playerState}:${G.onLadder}${takeSounds()}`,
     );

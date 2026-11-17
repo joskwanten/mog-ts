@@ -23,7 +23,7 @@ export class Tile {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     colbuffer: Uint8Array,
     screenX: number,
     screenY: number,
@@ -37,7 +37,7 @@ export class Tile {
   drawNative(
     x: number,
     y: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     colbuffer: Uint8Array,
     screenX: number,
     screenY: number,
@@ -51,7 +51,7 @@ export class Tile {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     _colbuffer: Uint8Array,
     screenX: number,
     screenY: number,
@@ -84,7 +84,7 @@ export class Tile {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -93,7 +93,7 @@ export class Tile {
   }
 
   /** Native-size variant of drawNoMask. */
-  drawNoMaskNative(x: number, y: number, screen: Uint8Array, screenX: number, screenY: number, pitch: number): void {
+  drawNoMaskNative(x: number, y: number, screen: Uint32Array, screenX: number, screenY: number, pitch: number): void {
     this.sprite.draw(x, y, this.sprite.w, this.sprite.h, screen, screenX, screenY, pitch);
   }
 

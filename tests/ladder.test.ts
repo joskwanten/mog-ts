@@ -19,7 +19,7 @@ test('pressing opposite directions on a ladder does not crash', () => {
   for (const f of readdirSync(dir))
     registerBinary(`graphics/original/${f}`, new Uint8Array(readFileSync(join(dir, f))));
   srand(1);
-  const screen = new Uint8Array(640 * 400);
+  const screen = new Uint32Array(640 * 400);
   const all = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE];
   const frame = (keys: number[]) => {
     for (const k of all) setKey(k, false);

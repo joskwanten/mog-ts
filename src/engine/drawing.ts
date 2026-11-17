@@ -1,6 +1,7 @@
 /**
- * 8-bit drawing primitives (port of the parts of drawing.cpp / line_clip.cpp
- * that the game uses). All buffers are indexed-colour, row stride = pitch.
+ * Drawing primitives (port of the parts of drawing.cpp / line_clip.cpp that
+ * the game uses). They draw into the RGBA frame buffer (row stride = pitch)
+ * with an RGBA colour.
  */
 
 /** C++ `int(float)`: truncate toward zero; non-finite results become 0. */
@@ -83,7 +84,7 @@ export function clipLine(
 
 /** Bresenham line, clipped to the pitch × (buffer height) area. */
 export function drawLine(
-  video: Uint8Array,
+  video: Uint32Array,
   x1: number,
   y1: number,
   x2: number,
@@ -140,7 +141,7 @@ export function drawLine(
 
 /** Filled rectangle. */
 export function fillRect(
-  screen: Uint8Array,
+  screen: Uint32Array,
   x: number,
   y: number,
   dx: number,
@@ -157,7 +158,7 @@ export function fillRect(
 
 /** Rectangle outline. */
 export function strokeRect(
-  screen: Uint8Array,
+  screen: Uint32Array,
   x: number,
   y: number,
   dx: number,
@@ -171,8 +172,8 @@ export function strokeRect(
   drawLine(screen, x, y + dy, x, y, pitch, color);
 }
 
-/** C `memset(buf + offset, value, count)`. */
-export function memset(buf: Uint8Array, offset: number, value: number, count: number): void {
+/** C `memset(buf + offset, value, count)` (per element: a pixel of the frame buffer or the collision buffer). */
+export function memset(buf: Uint8Array | Uint32Array, offset: number, value: number, count: number): void {
   if (count <= 0) return;
   buf.fill(value, Math.max(0, offset), Math.max(0, offset + count));
 }

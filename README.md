@@ -41,14 +41,16 @@ gekozen sets worden bewaard.
 src/
   main.ts            opstarten, vaste tijdstap (25 fps = 40 ms, zoals de remake), weergave
   platform/          browser-laag: keyboard (SDL-keycodes), audio (WebAudio), assets, video
-  engine/            8-bit indexed bitmaps (PCX), sprites, tiles, tekenprimitieven
+  engine/            RGBA-bitmaps (uit PCX), sprites, tiles, tekenprimitieven
   game/              de spellogica, per C++-bestand één module (zie PORTING.md)
 assets/              graphics, geluid en kamers van de remake (ongewijzigd)
 reference/cpp/       de C++-bronnen, om de port regel voor regel te vergelijken
 ```
 
-De spellogica tekent elke frame in een 640×400 indexed framebuffer plus een
-botsingsbuffer, precies zoals de remake; de botsingsdetectie hangt daarvan af. De port is
+De spellogica tekent elke frame in een 640×400 RGBA-framebuffer plus een 8-bit
+botsingsbuffer, zoals de remake (die in 256 kleuren tekende); de botsingsdetectie hangt
+daarvan af. De PCX-graphics worden bij het laden met het palet van `konami.pcx` omgezet
+naar RGBA, dus het beeld is pixel voor pixel gelijk aan de remake. De port is
 eerst getrouw vertaald en daarna opgeschoond: Engelse camelCase-namen (automatisch
 hernoemd via de TypeScript language service), Prettier-opmaak. Welke C++-naam bij welke
 TypeScript-naam hoort staat in [NAMES.md](NAMES.md); de werkwijze en modulekaart in

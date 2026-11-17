@@ -20,7 +20,7 @@ import { drawTile, drawTileNative } from './tiledraw';
 
 // const int MAX_FIRED_ARROWS[2]={2,3}; is defined in shrines.cpp but not used here.
 
-export function passageCycle(map: number, mapX: number, mapY: number, screen: Uint8Array): void {
+export function passageCycle(map: number, mapX: number, mapY: number, screen: Uint32Array): void {
   drawPassageFrame(screen);
   const room = map === 0 ? CASTLE_ROOMS.get(`${mapX},${mapY}`) : WORLD_ROOMS.get(map);
   room?.(screen);
@@ -34,19 +34,19 @@ const viewX = (col: number): number => GAME_VIEW_X + col * TILE_SIZE_X;
 const viewY = (row: number): number => GAME_VIEW_Y + row * TILE_SIZE_Y;
 
 /** Draw a one-cell tile at a column/row of the game view. */
-function drawCell(screen: Uint8Array, tile: number, col: number, row: number): void {
+function drawCell(screen: Uint32Array, tile: number, col: number, row: number): void {
   drawTile(screen, tile, viewX(col), viewY(row), TILE_SIZE_X, TILE_SIZE_Y);
 }
 
 /** Print text at a column/row of the whole screen (not offset by the game view). */
-function printAt(screen: Uint8Array, text: string, col: number, row: number): void {
+function printAt(screen: Uint32Array, text: string, col: number, row: number): void {
   tilePrint(text, TILE_SIZE_X * col, TILE_SIZE_Y * row, screen);
 }
 
 /** The keeper's message: lines from row 9 down, at column 10. */
 const MESSAGE_COL = 10;
 const MESSAGE_ROW = 9;
-function say(screen: Uint8Array, lines: readonly string[]): void {
+function say(screen: Uint32Array, lines: readonly string[]): void {
   lines.forEach((line, i) => printAt(screen, line, MESSAGE_COL, MESSAGE_ROW + i));
 }
 
@@ -54,12 +54,12 @@ function say(screen: Uint8Array, lines: readonly string[]): void {
 const CHOICE_ROW = 13;
 const CURSOR_TILE = 152;
 
-function drawCursor(screen: Uint8Array, col: number): void {
+function drawCursor(screen: Uint32Array, col: number): void {
   drawTile(screen, CURSOR_TILE, viewX(col), viewY(CHOICE_ROW - 1), TILE_SIZE_X, TILE_SIZE_Y * 2);
 }
 
 /** Draw the cursor in front of choice G.selecting; `cols` are the choices' columns. */
-function drawChoiceCursor(screen: Uint8Array, cols: readonly number[]): void {
+function drawChoiceCursor(screen: Uint32Array, cols: readonly number[]): void {
   const col = cols[G.selecting] as number | undefined;
   if (col !== undefined) drawCursor(screen, col);
 }
@@ -88,7 +88,7 @@ function consumeSword(): void {
 
 const WALL_TILE = 143;
 
-function drawPassageFrame(screen: Uint8Array): void {
+function drawPassageFrame(screen: Uint32Array): void {
   for (let i = 0; i < 32; i++) {
     drawCell(screen, WALL_TILE, i, 0);
     drawCell(screen, WALL_TILE, i, 18);
@@ -111,7 +111,7 @@ function drawPassageFrame(screen: Uint8Array): void {
 
 /** A speech balloon from column 4 to 27 and row `top` to `bottom`, with its tail tile. */
 function drawBalloon(
-  screen: Uint8Array,
+  screen: Uint32Array,
   top: number,
   bottom: number,
   tailTile: number,
@@ -150,12 +150,12 @@ const DEATH: Keeper = { name: 'DEATH', portrait: 167 };
 const ASCLEPIUS: Keeper = { name: 'ASCLEPIUS', portrait: 178 };
 
 /** The keeper's name (centred on column 20) and picture. */
-function drawKeeper(screen: Uint8Array, keeper: Keeper): void {
+function drawKeeper(screen: Uint32Array, keeper: Keeper): void {
   printAt(screen, keeper.name, 20 - (keeper.name.length >> 1), 5);
   drawTile(screen, keeper.portrait, viewX(15), viewY(2));
 }
 
-type PassageRoom = (screen: Uint8Array) => void;
+type PassageRoom = (screen: Uint32Array) => void;
 
 /** A keeper who only gives a hint. */
 function hint(keeper: Keeper, lines: readonly string[]): PassageRoom {
@@ -169,7 +169,7 @@ function hint(keeper: Keeper, lines: readonly string[]): PassageRoom {
 // Shops
 
 /** Draws a ware with its left edge at tile column `col`. */
-type WareLook = (screen: Uint8Array, col: number) => void;
+type WareLook = (screen: Uint32Array, col: number) => void;
 
 interface Ware {
   price: number;
@@ -303,7 +303,7 @@ const PASSWORD_BYE = 3;
 
 const SAVE_KEYS = [SDLK_F5, SDLK_F6, SDLK_F7, SDLK_F8, SDLK_F9];
 
-function demeterPasswordRoom(screen: Uint8Array): void {
+function demeterPasswordRoom(screen: Uint32Array): void {
   printAt(screen, 'h F5 TO F9', 6, 21);
   drawKeeper(screen, DEMETER);
 
@@ -375,7 +375,7 @@ const DEATH_ASK = 0;
 const DEATH_DECLINED = 1;
 const DEATH_REVIVED = 2;
 
-function deathRoom(screen: Uint8Array): void {
+function deathRoom(screen: Uint32Array): void {
   drawKeeper(screen, DEATH);
   const nobodyToRevive = (G.characterAlive[0] || !G.canRevive[0]) && (G.characterAlive[1] || !G.canRevive[1]);
   if (nobodyToRevive && G.passageState === DEATH_ASK) {

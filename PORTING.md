@@ -17,8 +17,8 @@ passes:
 
 | C++ file                        | TypeScript module                                                | Main exports                                                                                                                                                                       |
 | ------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| bitmaps.cpp, sprites.h, tiles.h | `src/engine/bitmap.ts`, `sprite.ts`, `tile.ts`                   | `Bitmap`, `Sprite`, `Tile`                                                                                                                                                         |
-| drawing.cpp, line_clip.cpp      | `src/engine/drawing.ts`                                          | `fillRect`, `strokeRect`, `drawLine`, `memset`                                                                                                                                     |
+| bitmaps.cpp, sprites.h, tiles.h | `src/engine/bitmap.ts`, `sprite.ts`, `tile.ts`                   | `Bitmap` (RGBA; `decodePCX`, `rgba`), `Sprite`, `Tile`                                                                                                                             |
+| drawing.cpp, line_clip.cpp      | `src/engine/drawing.ts`                                          | `fillRect`, `strokeRect`, `drawLine`, `memset` (RGBA colours)                                                                                                                      |
 | keyboard.cpp, SDL keys          | `src/platform/keyboard.ts`                                       | `SDLK_*`, `getKeyboardState`, `keyName`                                                                                                                                            |
 | sound.cpp                       | `src/platform/audio.ts`                                          | `playSound`, `createSound`, `playMusic`, `stopMusic`, …                                                                                                                            |
 | filehandling.cpp, path.cpp      | `src/platform/assets.ts`                                         | `readText`, `readBinary`, `GRAPHIC_SETS`, `SOUND_SETS`                                                                                                                             |
@@ -46,10 +46,17 @@ remake (which used globals); loaded bitmaps, tile numbers and sounds are in
 `src/game/resources.ts`. Module-private state is a module-level `let`. Game states are
 `State.*` constants.
 
-**Frame buffer and collision.** Every frame the game draws into a 640×400 8-bit indexed
-buffer and paints the same pixels' collision types (`T_WALL`, `T_PLAYER`, …) into
-`G.collision`. Collision tests read that buffer, so the order of drawing and testing is
-behaviour. Do not reorder statements without the replay tests.
+**Frame buffer and collision.** Every frame the game draws into a 640×400 RGBA buffer
+(`Uint32Array`, packed as in `ImageData`; the alpha byte is ignored on output) and paints
+the same pixels' collision types (`T_WALL`, `T_PLAYER`, …) into the 8-bit `G.collision`.
+Collision tests read that buffer, so the order of drawing and testing is behaviour. Do not
+reorder statements without the replay tests.
+
+**Colour.** The remake drew in 256 colours with the palette of `konami.pcx`. Here
+`loadBitmap` converts each PCX to RGBA with that palette (`G.palette`); colour index 0
+becomes transparent (stored as 0). A pixel that is not 0 is drawn — blended when its
+alpha is below 255 — and paints the collision buffer. Colours the game gives as palette
+indices (bars, map, screen clears) go through `paletteColor(i)`.
 
 **Integer semantics.** C `int` arithmetic stays integer: every `int / int` is
 `idiv(a, b)`; `int(float)` is `toInt(x)`; `rand()` comes from `cutil.ts` (seedable).
@@ -63,8 +70,8 @@ the cyclops overwrote the screen-size parameters for the rest of the frame
 
 ## Tests
 
-All tests are golden masters: they record, frame by frame, a hash of the frame buffer and
-the collision buffer plus the sounds and music requested, and compare with `tests/golden/`.
+All tests are golden masters: they record, frame by frame, a hash of the frame buffer (as
+RGB) and the collision buffer plus the sounds and music requested, and compare with `tests/golden/`.
 
 - `tests/replay.test.ts` — 4000 frames of seeded random play with teleports through all worlds.
 - `tests/coverage.test.ts` — every one of the 311 rooms with random play, every shrine and
@@ -72,6 +79,7 @@ the collision buffer plus the sounds and music requested, and compare with `test
 - `tests/player.test.ts` — fixed movement patterns (walk, jump, fall, ladders, sword,
   weapon) from random start positions in every 6th room.
 - `tests/tiles.test.ts` — the complete tile table (tile numbers are used by the room files).
+- `tests/bitmap.test.ts` — RGBA conversion, transparency, alpha blending.
 - `tests/passwords.test.ts` — password round trips.
 
 After an intended behaviour change: `UPDATE_GOLDEN=1 npx vitest run`, and review why frames

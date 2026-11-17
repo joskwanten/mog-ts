@@ -45,7 +45,7 @@ import {
   T_LCLOUD,
 } from './constants';
 import { f32, idiv, rand, toInt } from './cutil';
-import { addObject, loadBitmap } from './gameaux';
+import { addObject, loadBitmap, paletteColor } from './gameaux';
 import type { GameObject } from './object';
 import { gfx, sfx, tileIds } from './resources';
 import { G } from './state';
@@ -67,7 +67,7 @@ function soundSubstMusicNow(_f: string): void {
 const DEMON_APPEARS = 160;
 
 /** Replay the intro up to `state` after the graphics were reloaded (the bitmaps lost the dissolve). */
-export function redoDemonIntro(state: number, screen: Uint8Array | null): void {
+export function redoDemonIntro(state: number, screen: Uint32Array | null): void {
   const frames = state < 193 ? state : 160;
   for (let i = 0; i < frames; i++) demonIntro(i, screen);
 }
@@ -83,7 +83,7 @@ const DISSOLVE_Y = [3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 1, 2, 2, 2, 1, 1];
  * Dissolve step `step` (0–15) on the `cols`×`rows` tiles of a bitmap from tile
  * column `col` (row 0). Rows are SCREEN_X pixels apart, as in the C++.
  */
-function dissolveTiles(img: Uint8Array, step: number, col: number, cols: number, rows: number): void {
+function dissolveTiles(img: Uint32Array, step: number, col: number, cols: number, rows: number): void {
   const half = 4 * TILE_UNIT;
   const sx = DISSOLVE_X[step] * TILE_UNIT;
   const sy = DISSOLVE_Y[step] * TILE_UNIT;
@@ -117,7 +117,7 @@ const DEMON_SHEETS = new Map<number, { col: number; cols: number; rows: number }
 ]);
 
 /** `screen` may be null (C++ passes 0 from redoDemonIntro). */
-export function demonIntro(state: number, screen: Uint8Array | null): void {
+export function demonIntro(state: number, screen: Uint32Array | null): void {
   if (state === 1) {
     gfx.back = loadBitmap(`back${G.world}.pcx`);
     G.demonBackState = 0;
@@ -128,7 +128,7 @@ export function demonIntro(state: number, screen: Uint8Array | null): void {
   if (state < 32 && screen !== null && (state & 0x02) !== 0) {
     for (let i = GAME_VIEW_Y; i < SCREEN_Y; i++) {
       for (let j = 0, offs = i * SCREEN_X; j < SCREEN_X; j++, offs++) {
-        if (((j + i) & 0x01) === 0) screen[offs] = 255;
+        if (((j + i) & 0x01) === 0) screen[offs] = paletteColor(255);
       }
     }
   }
@@ -202,7 +202,7 @@ export function demonIntro(state: number, screen: Uint8Array | null): void {
 /** The order in which the pixels of each 4×4 block fade in (an ordered dither). */
 const FADE_IN_ORDER = [0, 8, 2, 9, 12, 4, 14, 6, 3, 10, 1, 11, 15, 7, 13, 5];
 
-export function drawDemonBackground(screen: Uint8Array, pitch: number): void {
+export function drawDemonBackground(screen: Uint32Array, pitch: number): void {
   const backBmp = gfx.back;
   if (backBmp === null || G.fightingDemon <= 96) return;
 

@@ -1,8 +1,8 @@
 /**
- * Presents the game's 8-bit indexed frame buffer on a canvas (port of render.cpp).
+ * Presents the game's RGBA frame buffer on a canvas (port of render.cpp).
  *
- * The game draws every frame into a 640×400 indexed buffer. The palette
- * (G.colors) holds 6-bit VGA values, so each component is shifted left by 2.
+ * The game draws every frame into a 640×400 buffer of RGBA pixels (packed as
+ * in ImageData). The frame is opaque: its alpha byte is ignored.
  * The remake describes up to four "views" (logic source rect → physical
  * destination rect); view 0 is the status bar or full screen, view 1 the
  * game area (used by its zoom feature).
@@ -24,7 +24,6 @@ export class Video {
   readonly ctx: CanvasRenderingContext2D;
   private readonly frame: ImageData;
   private readonly frame32: Uint32Array;
-  private readonly lut = new Uint32Array(256);
   private readonly staging: HTMLCanvasElement;
   private readonly stagingCtx: CanvasRenderingContext2D;
 
@@ -42,22 +41,10 @@ export class Video {
     this.stagingCtx.imageSmoothingEnabled = false;
   }
 
-  /** Rebuild the colour lookup table from a 768-byte 6-bit palette. */
-  setPalette(colors: Uint8Array): void {
-    for (let i = 0; i < 256; i++) {
-      const r = (colors[i * 3] << 2) & 0xff;
-      const g = (colors[i * 3 + 1] << 2) & 0xff;
-      const b = (colors[i * 3 + 2] << 2) & 0xff;
-      // ImageData is RGBA in memory → little-endian ABGR as uint32.
-      this.lut[i] = (0xff << 24) | (b << 16) | (g << 8) | r;
-    }
-  }
-
-  /** Convert the indexed buffer and draw it using the view rectangles. */
-  present(buffer: Uint8Array, views: ViewRects): void {
+  /** Draw the frame buffer using the view rectangles. */
+  present(buffer: Uint32Array, views: ViewRects): void {
     const out = this.frame32;
-    const lut = this.lut;
-    for (let i = 0; i < buffer.length; i++) out[i] = lut[buffer[i]];
+    for (let i = 0; i < buffer.length; i++) out[i] = buffer[i] | 0xff000000;
     this.stagingCtx.putImageData(this.frame, 0, 0);
 
     const ctx = this.ctx;

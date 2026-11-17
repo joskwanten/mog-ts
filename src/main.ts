@@ -55,8 +55,8 @@ const canvas = document.getElementById('screen') as HTMLCanvasElement;
 const overlay = document.getElementById('overlay') as HTMLDivElement;
 const video = new Video(canvas);
 
-/** The 8-bit indexed frame buffer the game draws into (render.cpp: buffer_screen). */
-const bufferScreen = new Uint8Array(SCREEN_X * SCREEN_Y);
+/** The RGBA frame buffer the game draws into (render.cpp: buffer_screen). */
+const bufferScreen = new Uint32Array(SCREEN_X * SCREEN_Y);
 
 let running = false;
 let busy = false;
@@ -69,7 +69,6 @@ function setName(path: string): string {
 function frame(): void {
   pollKeyboard();
   gameCycle(bufferScreen);
-  video.setPalette(G.palette);
   video.present(bufferScreen, G);
 }
 

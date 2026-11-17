@@ -131,6 +131,7 @@ import {
   tilePrint,
   tilePrintOpaque,
   updateTypedWord,
+  paletteColor,
 } from './gameaux';
 import { animateTiles, roomEvents, testInteractions, updateLevers } from './gameinteractions';
 import { animateObjects } from './gameobjects';
@@ -288,7 +289,7 @@ function readSaveSlot(slot: number): string | null {
   }
 }
 
-export function gameCycle(screen: Uint8Array): void {
+export function gameCycle(screen: Uint32Array): void {
   const keyboard = getKeyboardState();
 
   G.frameCounter++;
@@ -299,7 +300,7 @@ export function gameCycle(screen: Uint8Array): void {
 
   // Clear the screen borders:
   if (G.state === State.Playing || G.state === State.InterScreen) {
-    fillRect(screen, 0, 0, GAME_VIEW_X, SCREEN_Y, SCREEN_X, 0);
+    fillRect(screen, 0, 0, GAME_VIEW_X, SCREEN_Y, SCREEN_X, paletteColor(0));
     fillRect(
       screen,
       GAME_VIEW_X + 32 * TILE_SIZE_X,
@@ -307,7 +308,7 @@ export function gameCycle(screen: Uint8Array): void {
       SCREEN_X - (GAME_VIEW_X + 32 * TILE_SIZE_X),
       SCREEN_Y,
       SCREEN_X,
-      0,
+      paletteColor(0),
     );
     fillRect(
       screen,
@@ -316,7 +317,7 @@ export function gameCycle(screen: Uint8Array): void {
       32 * TILE_SIZE_X,
       SCREEN_Y - (GAME_VIEW_Y + 20 * TILE_SIZE_Y),
       SCREEN_X,
-      0,
+      paletteColor(0),
     );
   }
 
@@ -355,7 +356,7 @@ export function gameCycle(screen: Uint8Array): void {
 }
 
 // KONAMI LOGO APPEARING:
-function konamiAppear(screen: Uint8Array, keyboard: Uint8Array): void {
+function konamiAppear(screen: Uint32Array, keyboard: Uint8Array): void {
   let i: number;
 
   if (G.subState === 0) {
@@ -370,7 +371,8 @@ function konamiAppear(screen: Uint8Array, keyboard: Uint8Array): void {
     // setMusicVolume(musicVolume);
     setSfxVolume(sfx.volume);
     // Clear the screen:
-    memset(screen, 0, gfx.konami!.getPixels()![0], SCREEN_X * SCREEN_Y);
+    // Clear to the colour of the logo's top-left pixel (0 = transparent: palette colour 0).
+    memset(screen, 0, gfx.konami!.getPixels()![0] || paletteColor(0), SCREEN_X * SCREEN_Y);
     // set_palete((BYTE *)konamiBitmap->getPalette());
 
     for (; G.subState < 25; G.subState++) {
@@ -406,7 +408,7 @@ function konamiAppear(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function konamiLogo(screen: Uint8Array, keyboard: Uint8Array): void {
+function konamiLogo(screen: Uint32Array, keyboard: Uint8Array): void {
   G.subState++;
   gfx.konami!.draw(0, 0, SCREEN_X, SCREEN_Y, screen, SCREEN_X, SCREEN_Y, SCREEN_X);
   if (G.subState > 100) {
@@ -420,11 +422,11 @@ function konamiLogo(screen: Uint8Array, keyboard: Uint8Array): void {
 }
 
 // MAIN MENU:
-function titleMenu(screen: Uint8Array, keyboard: Uint8Array): void {
+function titleMenu(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // Clear the screen:
   G.subState++;
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   // set_palete((BYTE *)tilesBitmap->getPalette());
   gfx.menu!.draw(0, 0, SCREEN_X, SCREEN_Y, screen, SCREEN_X, SCREEN_Y, SCREEN_X);
   tilePrint('PUSH SPACE KEY', TILE_SIZE_X * 13, TILE_SIZE_Y * 19, screen);
@@ -473,17 +475,17 @@ function titleMenu(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function playStart(screen: Uint8Array, keyboard: Uint8Array): void {
+function playStart(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // SPACE was pressed:
   if (G.subState === 0) playSound(sfx.gamestart);
   if (G.subState % 4 === 0) {
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     gfx.menu!.draw(0, 0, SCREEN_X, SCREEN_Y, screen, SCREEN_X, SCREEN_Y, SCREEN_X);
     tilePrint('  PLAY START  ', TILE_SIZE_X * 13, TILE_SIZE_Y * 19, screen);
   }
   if (G.subState % 4 === 2) {
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     gfx.menu!.draw(0, 0, SCREEN_X, SCREEN_Y, screen, SCREEN_X, SCREEN_Y, SCREEN_X);
   }
   if (G.subState >= 30) {
@@ -499,7 +501,7 @@ function playStart(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function playing(screen: Uint8Array, keyboard: Uint8Array): void {
+function playing(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // GAME!!!
   if (G.subState === 0) {
@@ -527,7 +529,7 @@ function playing(screen: Uint8Array, keyboard: Uint8Array): void {
     G.world10DoorY = y[i];
   }
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
   drawMap(screen, 0);
 
@@ -802,9 +804,9 @@ function playing(screen: Uint8Array, keyboard: Uint8Array): void {
   if (keyboard[SDLK_PAGEDOWN] !== 0 && G.zoom > 320) G.zoom -= 8;
 }
 
-function itemScreen(screen: Uint8Array, keyboard: Uint8Array): void {
+function itemScreen(screen: Uint32Array, keyboard: Uint8Array): void {
   // ITEMS SCREEN:
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
 
   drawStats(screen);
@@ -1241,14 +1243,14 @@ function itemScreen(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function resumeAfterReset(screen: Uint8Array, keyboard: Uint8Array): void {
+function resumeAfterReset(screen: Uint32Array, keyboard: Uint8Array): void {
   if (G.oldKeyboard[G.keyItem] === 0 && G.oldKeyboard[SDLK_RETURN] === 0) {
     G.state = State.Playing;
     G.subState = 1;
   }
 }
 
-function passage(screen: Uint8Array, keyboard: Uint8Array): void {
+function passage(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // INSIDE A PASSAGE, SHOP, ETC.:
   if (G.subState === 0) {
@@ -1260,7 +1262,7 @@ function passage(screen: Uint8Array, keyboard: Uint8Array): void {
     G.shopItems[2] = true;
   }
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
 
   drawStats(screen);
@@ -1292,14 +1294,14 @@ function passage(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function resumeAfterDown(screen: Uint8Array, keyboard: Uint8Array): void {
+function resumeAfterDown(screen: Uint32Array, keyboard: Uint8Array): void {
   if (G.oldKeyboard[G.keyDown] === 0) {
     G.state = State.Playing;
     G.subState = 1;
   }
 }
 
-function worldEntry(screen: Uint8Array, keyboard: Uint8Array): void {
+function worldEntry(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // SHOWING THE WORLD OR CASTLE ENTRY MESSAGE:
   G.world3Room06Counter = 0;
@@ -1323,8 +1325,8 @@ function worldEntry(screen: Uint8Array, keyboard: Uint8Array): void {
     if (G.world !== 0) playSound(sfx.gamestart);
   }
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
 
   drawStats(screen);
@@ -1410,13 +1412,13 @@ function worldEntry(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function redefineKeys(screen: Uint8Array, keyboard: Uint8Array): void {
+function redefineKeys(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // REDEFINING KEYS!!!
   let found: boolean;
   let i: number;
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
 
   tmp = '';
@@ -1532,7 +1534,7 @@ function redefineKeys(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
+function characterDead(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // CHARACTER DEAD MESSAGE:
   let i: number, j: number;
@@ -1541,7 +1543,7 @@ function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
   if (j > SCREEN_X) j = SCREEN_X;
   if (j > 0) {
     for (i = 0; i < SCREEN_Y; i++) {
-      memset(screen, i * SCREEN_X, 0, j);
+      memset(screen, i * SCREEN_X, paletteColor(0), j);
     }
   }
 
@@ -1575,7 +1577,7 @@ function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
       if (j > SCREEN_X) j = SCREEN_X;
       if (j > 0) {
         for (i = 0; i < SCREEN_Y; i++) {
-          memset(screen, i * SCREEN_X, 0, j);
+          memset(screen, i * SCREEN_X, paletteColor(0), j);
         }
       }
     }
@@ -1585,7 +1587,7 @@ function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
       if (j > SCREEN_X) j = SCREEN_X;
       if (j > 0) {
         for (i = 0; i < SCREEN_Y; i++) {
-          memset(screen, i * SCREEN_X, 0, j);
+          memset(screen, i * SCREEN_X, paletteColor(0), j);
         }
       }
     }
@@ -1605,7 +1607,7 @@ function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
 
       memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
       drawMap(screen, 1);
-      memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+      memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
 
       // Compute the new position of the character in the room:
       G.character = 1 - G.character;
@@ -1723,7 +1725,7 @@ function characterDead(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function tomb(screen: Uint8Array, keyboard: Uint8Array): void {
+function tomb(screen: Uint32Array, keyboard: Uint8Array): void {
   // LOOKING AT A TOMB:
   if (G.subState === 0) {
     stopMusic();
@@ -1732,7 +1734,7 @@ function tomb(screen: Uint8Array, keyboard: Uint8Array): void {
     G.subState = 1;
   }
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   memset(G.collision!, 0, 0, SCREEN_X * SCREEN_Y);
 
   drawStats(screen);
@@ -1833,7 +1835,7 @@ function tomb(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function leaveTomb(screen: Uint8Array, keyboard: Uint8Array): void {
+function leaveTomb(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   if (keyboard[G.keyWeapon] === 0) {
     G.state = State.Playing;
@@ -1845,7 +1847,7 @@ function leaveTomb(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function passwordEntry(screen: Uint8Array, keyboard: Uint8Array): void {
+function passwordEntry(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   let i: number, j: number;
   const ypos = [8, 10, 12];
@@ -1861,7 +1863,7 @@ function passwordEntry(screen: Uint8Array, keyboard: Uint8Array): void {
   let buf: string;
 
   // Entering the code!!!!:
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   tilePrint('h F5 TO F9', TILE_SIZE_X * 9, TILE_SIZE_Y * 2, screen);
 
   tilePrint('ENTER THE SECRET', TILE_SIZE_X * 9, TILE_SIZE_Y * 4, screen);
@@ -1937,7 +1939,7 @@ function passwordEntry(screen: Uint8Array, keyboard: Uint8Array): void {
   // Draw the cursor:
   x = xpos[G.passwordPos % 16];
   y = ypos[idiv(G.passwordPos, 16)];
-  strokeRect(screen, x * TILE_SIZE_X - 1, y * TILE_SIZE_Y - 1, TILE_SIZE_X, TILE_SIZE_Y, SCREEN_X, 180);
+  strokeRect(screen, x * TILE_SIZE_X - 1, y * TILE_SIZE_Y - 1, TILE_SIZE_X, TILE_SIZE_Y, SCREEN_X, paletteColor(180));
 
   if (G.subState === 0) {
     let slot = -1;
@@ -1998,7 +2000,7 @@ function passwordEntry(screen: Uint8Array, keyboard: Uint8Array): void {
       if (j > SCREEN_X) j = SCREEN_X;
       if (j > 0) {
         for (i = 0; i < SCREEN_Y; i++) {
-          memset(screen, i * SCREEN_X, 0, j);
+          memset(screen, i * SCREEN_X, paletteColor(0), j);
         }
       }
     }
@@ -2014,12 +2016,12 @@ function passwordEntry(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function devStart(screen: Uint8Array, keyboard: Uint8Array): void {
+function devStart(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   let filename: string;
 
   // Developers entry code:
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
 
   tilePrint('START ROOM:', TILE_SIZE_X * 9, TILE_SIZE_Y * 2, screen);
 
@@ -2062,17 +2064,17 @@ function devStart(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function interScreen(screen: Uint8Array, keyboard: Uint8Array): void {
+function interScreen(screen: Uint32Array, keyboard: Uint8Array): void {
   // INTER-SCREEN
   if (G.interScreen === 0) {
     G.state = State.Playing;
   } else {
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     G.interScreen--;
   }
 }
 
-function story(screen: Uint8Array, keyboard: Uint8Array): void {
+function story(screen: Uint32Array, keyboard: Uint8Array): void {
   // STORY SCREEN:
   let i: number;
   let y = 0,
@@ -2089,7 +2091,7 @@ function story(screen: Uint8Array, keyboard: Uint8Array): void {
   if (G.subState >= 27 * TILE_SIZE_Y && G.subState < 39 * TILE_SIZE_Y) y = 0;
   if (G.subState >= 39 * TILE_SIZE_Y) y = 39 * TILE_SIZE_Y - G.subState;
 
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
   for (i = 0; i < 12; i++) {
     tmpy = y + i * TILE_SIZE_Y * 2;
     if (tmpy < 25 * TILE_SIZE_Y && tmpy > -TILE_SIZE_Y) {
@@ -2105,7 +2107,7 @@ function story(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function ending(screen: Uint8Array, keyboard: Uint8Array): void {
+function ending(screen: Uint32Array, keyboard: Uint8Array): void {
   // ENDING SEQUENCE!!!!:
   G.subState++;
   if (G.subState < 40) {
@@ -2113,20 +2115,20 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
 
     const j = idiv(G.subState, 4) * TILE_SIZE_X;
     for (i = 0; i < G.roomHeight * TILE_SIZE_Y; i++) {
-      memset(screen, (GAME_VIEW_Y + i) * SCREEN_X + GAME_VIEW_X, 0, j);
-      memset(screen, (GAME_VIEW_Y + i) * SCREEN_X + GAME_VIEW_X + (G.roomWidth * TILE_SIZE_X - j), 0, j);
+      memset(screen, (GAME_VIEW_Y + i) * SCREEN_X + GAME_VIEW_X, paletteColor(0), j);
+      memset(screen, (GAME_VIEW_Y + i) * SCREEN_X + GAME_VIEW_X + (G.roomWidth * TILE_SIZE_X - j), paletteColor(0), j);
     }
     for (i = 0; i < TILE_SIZE_Y; i++) {
       memset(
         screen,
         (GAME_VIEW_Y + idiv(G.subState, 4) * TILE_SIZE_Y + i) * SCREEN_X + GAME_VIEW_X,
-        0,
+        paletteColor(0),
         G.roomWidth * TILE_SIZE_X,
       );
       memset(
         screen,
         (GAME_VIEW_Y + (G.roomHeight - (idiv(G.subState, 4) + 1)) * TILE_SIZE_Y + i) * SCREEN_X + GAME_VIEW_X,
-        0,
+        paletteColor(0),
         G.roomWidth * TILE_SIZE_X,
       );
     }
@@ -2140,7 +2142,7 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
 
   if (G.subState === 96) {
     stopMusic();
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
 
     // for(i=0;i<8;i++) delete tiles[demonTile+i]; (garbage collected)
     G.tiles[tileIds.demon] = new Tile(gfx.final!, 0, 0, TILE_SIZE_X * 20, TILE_SIZE_Y * 14, T_NADA);
@@ -2180,7 +2182,7 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
     playMusic('end1', null, null);
   }
   if (G.subState >= 128 && G.subState < 464) {
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     // POPOLON AND APHRODITE:
     drawTileNative(
       screen,
@@ -2262,7 +2264,7 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 
   if (G.subState === 464) {
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     stopMusic();
   }
 
@@ -2282,7 +2284,7 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
     if (G.subState >= 512 + 157 * TILE_SIZE_Y && G.subState < 512 + 169 * TILE_SIZE_Y) y = -118 * TILE_SIZE_Y;
     if (G.subState >= 512 + 169 * TILE_SIZE_Y) y = 51 * TILE_SIZE_Y - (G.subState - 512);
 
-    memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+    memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
     for (i = 0; i < 68; i++) {
       tmpy = y + i * TILE_SIZE_Y * 2;
       if (tmpy < 25 * TILE_SIZE_Y && tmpy > -TILE_SIZE_Y) {
@@ -2298,10 +2300,10 @@ function ending(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-function options(screen: Uint8Array, keyboard: Uint8Array): void {
+function options(screen: Uint32Array, keyboard: Uint8Array): void {
   let tmp: string;
   // OPTIONS MENU:
-  memset(screen, 0, 0, SCREEN_X * SCREEN_Y);
+  memset(screen, 0, paletteColor(0), SCREEN_X * SCREEN_Y);
 
   fillRect(
     screen,
@@ -2310,7 +2312,7 @@ function options(screen: Uint8Array, keyboard: Uint8Array): void {
     TILE_SIZE_X * 19,
     TILE_SIZE_Y,
     SCREEN_X,
-    47,
+    paletteColor(47),
   );
 
   tilePrint('OPTIONS MENU', TILE_SIZE_X * 14, TILE_SIZE_Y * 2, screen);
@@ -2356,7 +2358,7 @@ function options(screen: Uint8Array, keyboard: Uint8Array): void {
   }
 }
 
-const STATE_HANDLERS: Record<number, (screen: Uint8Array, keyboard: Uint8Array) => void> = {
+const STATE_HANDLERS: Record<number, (screen: Uint32Array, keyboard: Uint8Array) => void> = {
   [State.KonamiAppear]: konamiAppear,
   [State.KonamiLogo]: konamiLogo,
   [State.TitleMenu]: titleMenu,
@@ -2379,7 +2381,7 @@ const STATE_HANDLERS: Record<number, (screen: Uint8Array, keyboard: Uint8Array) 
   [State.Options]: options,
 };
 
-export function drawCharacter(screen: Uint8Array): void {
+export function drawCharacter(screen: Uint32Array): void {
   const oldc = G.character;
 
   if (G.hitTime > 0 && G.playerFrame < 9) {

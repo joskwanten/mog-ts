@@ -1,93 +1,124 @@
 /**
- * 8-bit indexed bitmap loaded from a PCX file (port of bitmaps.cpp).
+ * RGBA bitmap (port of bitmaps.cpp, which used 8-bit indexed PCX images).
  *
- * All drawing happens into 8-bit indexed buffers ("screens") of size
- * `screen_x * screen_y` with a row stride of `pitch`. Colour index 0 is
- * transparent. The same routines also paint/test the collision buffer: there
- * every pixel is a bit-set of collision types (T_WALL, T_PLAYER, ...).
+ * Pixels are 32-bit RGBA, packed as in ImageData on a little-endian machine
+ * (0xAABBGGRR). A fully transparent pixel is always stored as 0, so `pixel !== 0`
+ * means "drawn": that pixel is copied (or blended, for partial alpha) into the
+ * frame buffer and paints/tests the collision buffer. The collision buffer is
+ * separate and stays 8-bit: every pixel is a bit-set of collision types
+ * (T_WALL, T_PLAYER, ...).
  *
  * The scaled blitters keep the original Bresenham-style stepping exactly,
  * including its quirks (e.g. `spy >> 2` as initial error when shrinking),
  * because collision detection depends on which pixels get touched.
  */
-export class Bitmap {
-  private image: Uint8Array | null = null;
-  private palette = new Uint8Array(768);
-  private width = 0;
-  private height = 0;
 
-  /** Decode a PCX file (8 bpp, RLE, 256-colour palette at the end). */
-  static fromPCX(data: Uint8Array): Bitmap {
-    const b = new Bitmap();
-    b.loadPCX(data);
-    return b;
+/** Pack a colour (0..255 per component) as an RGBA pixel. */
+export function rgba(r: number, g: number, b: number, a = 255): number {
+  return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+}
+
+/** Draw pixel `p` (not 0) at `d`: copied when opaque, blended over the frame buffer otherwise. */
+function put(screen: Uint32Array, d: number, p: number): void {
+  const a = p >>> 24;
+  if (a === 0xff) {
+    screen[d] = p;
+    return;
   }
+  const q = screen[d];
+  const mix = (shift: number) => Math.round((((p >>> shift) & 0xff) * a + ((q >>> shift) & 0xff) * (255 - a)) / 255);
+  screen[d] = rgba(mix(0), mix(8), mix(16));
+}
 
-  /** Build a bitmap from raw indexed pixels (used by tests and tools). */
-  static fromPixels(width: number, height: number, pixels: Uint8Array, palette?: Uint8Array): Bitmap {
-    const b = new Bitmap();
-    b.width = width;
-    b.height = height;
-    b.image = pixels;
-    if (palette) b.palette.set(palette);
-    return b;
+/** Opaque RGBA colours for a 768-byte palette of 6-bit VGA values (as stored by the game). */
+export function paletteToRGBA(palette: Uint8Array): Uint32Array {
+  const lut = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    lut[i] = rgba((palette[i * 3] << 2) & 0xff, (palette[i * 3 + 1] << 2) & 0xff, (palette[i * 3 + 2] << 2) & 0xff);
   }
+  return lut;
+}
 
-  private loadPCX(data: Uint8Array): boolean {
-    let pos = 0;
-    const getc = (): number => (pos < data.length ? data[pos++] : -1);
+/** A decoded 8-bit PCX image: colour indices plus its palette (6-bit values). */
+export interface IndexedImage {
+  width: number;
+  height: number;
+  indices: Uint8Array;
+  palette: Uint8Array;
+}
 
-    if (getc() !== 10 || getc() !== 5 || getc() !== 1) return false;
-    if (getc() !== 8) return false;
+/** Decode a PCX file (8 bpp, RLE, 256-colour palette at the end); null if it is not one. */
+export function decodePCX(data: Uint8Array): IndexedImage | null {
+  let pos = 0;
+  const getc = (): number => (pos < data.length ? data[pos++] : -1);
 
-    // Window origin (ignored), then window extents.
-    getc();
-    getc();
-    getc();
-    getc();
-    let a = getc();
-    let b = getc();
-    this.width = a + b * 256 + 1;
-    a = getc();
-    b = getc();
-    this.height = a + b * 256 + 1;
+  if (getc() !== 10 || getc() !== 5 || getc() !== 1) return null;
+  if (getc() !== 8) return null;
 
-    // Skip the rest of the 128-byte header.
-    pos += 116;
+  // Window origin (ignored), then window extents.
+  pos += 4;
+  const width = getc() + getc() * 256 + 1;
+  const height = getc() + getc() * 256 + 1;
 
-    const size = this.width * this.height;
-    const image = new Uint8Array(size);
-    let offset = 0;
-    while (offset < size) {
-      let columnas = this.width;
-      while (columnas > 0 && offset < size) {
-        let byte = getc() & 0xff;
-        if (byte <= 192) {
-          image[offset++] = byte;
-          columnas--;
-        } else {
-          let contador = byte & 63;
-          byte = getc() & 0xff;
-          for (; contador !== 0 && offset < size; contador--) {
-            image[offset++] = byte;
-            columnas--;
-          }
+  // Skip the rest of the 128-byte header.
+  pos += 116;
+
+  const size = width * height;
+  const indices = new Uint8Array(size);
+  let offset = 0;
+  while (offset < size) {
+    let columns = width;
+    while (columns > 0 && offset < size) {
+      let byte = getc() & 0xff;
+      if (byte <= 192) {
+        indices[offset++] = byte;
+        columns--;
+      } else {
+        let count = byte & 63;
+        byte = getc() & 0xff;
+        for (; count !== 0 && offset < size; count--) {
+          indices[offset++] = byte;
+          columns--;
         }
       }
     }
-    this.image = image;
-
-    if (getc() !== 12) return false;
-    // The palette is stored 8-bit; the game works with 6-bit VGA values.
-    for (let c = 0; c < 768; c++) this.palette[c] = (getc() & 0xff) >> 2;
-    return true;
   }
 
-  getPixels(): Uint8Array | null {
+  // The palette is stored 8-bit; the game works with 6-bit VGA values.
+  // (A missing palette leaves it black, like the original loader.)
+  const palette = new Uint8Array(768);
+  if (getc() === 12) for (let c = 0; c < 768; c++) palette[c] = (getc() & 0xff) >> 2;
+  return { width, height, indices, palette };
+}
+
+export class Bitmap {
+  private image: Uint32Array | null = null;
+  private width = 0;
+  private height = 0;
+
+  /** An indexed image in the colours of `colors` (default: its own palette); index 0 is transparent. */
+  static fromIndexed(img: IndexedImage, colors = paletteToRGBA(img.palette)): Bitmap {
+    const pixels = new Uint32Array(img.indices.length);
+    for (let i = 0; i < pixels.length; i++) {
+      const c = img.indices[i];
+      if (c !== 0) pixels[i] = colors[c];
+    }
+    return Bitmap.fromRGBA(img.width, img.height, pixels);
+  }
+
+  /** Build a bitmap from RGBA pixels (fully transparent pixels are normalised to 0). */
+  static fromRGBA(width: number, height: number, pixels: Uint32Array): Bitmap {
+    const b = new Bitmap();
+    b.width = width;
+    b.height = height;
+    for (let i = 0; i < pixels.length; i++) if (pixels[i] >>> 24 === 0) pixels[i] = 0;
+    b.image = pixels;
+    return b;
+  }
+
+  /** The pixels (mutable: the game animates water and dissolves tiles in place). */
+  getPixels(): Uint32Array | null {
     return this.image;
-  }
-  getPalette(): Uint8Array {
-    return this.palette;
   }
   getWidth(): number {
     return this.width;
@@ -102,7 +133,7 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -125,7 +156,7 @@ export class Bitmap {
             xt = 0;
             for (let j = 0; j < sx; j++) {
               if (j + x >= 0 && j + x < screenX && xt < srcW && image[xt + offso] !== 0)
-                screen[x + j + offsd] = image[xt + offso];
+                put(screen, x + j + offsd, image[xt + offso]);
               xError -= srcW;
               if (xError < 0) {
                 xError += sx;
@@ -136,7 +167,8 @@ export class Bitmap {
             xError = srcW >> 1;
             xt = 0;
             for (let j = 0; j < srcW; j++) {
-              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0) screen[x + xt + offsd] = image[j + offso];
+              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0)
+                put(screen, x + xt + offsd, image[j + offso]);
               xError -= sx;
               if (xError < 0) {
                 xError += srcW;
@@ -165,7 +197,7 @@ export class Bitmap {
             xt = 0;
             for (let j = 0; j < sx; j++) {
               if (j + x >= 0 && j + x < screenX && xt < srcW && image[xt + offso] !== 0)
-                screen[x + j + offsd] = image[xt + offso];
+                put(screen, x + j + offsd, image[xt + offso]);
               xError -= srcW;
               if (xError < 0) {
                 xError += sx;
@@ -176,7 +208,8 @@ export class Bitmap {
             xError = srcW >> 1;
             xt = 0;
             for (let j = 0; j < srcW; j++) {
-              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0) screen[x + xt + offsd] = image[j + offso];
+              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0)
+                put(screen, x + xt + offsd, image[j + offso]);
               xError -= sx;
               if (xError < 0) {
                 xError += srcW;
@@ -347,7 +380,7 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -355,7 +388,7 @@ export class Bitmap {
     const image = this.image;
     if (image === null) return;
     const plot = (d: number, s: number) => {
-      screen[d] = image[s];
+      put(screen, d, image[s]);
     };
     if (sx === spx && sy === spy) this.blit1(x1, y1, spx, spy, x, y, screenX, screenY, pitch, plot);
     else this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, null, plot);
@@ -370,7 +403,7 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    screen: Uint32Array,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -379,7 +412,7 @@ export class Bitmap {
     const image = this.image;
     if (image === null) return;
     this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, cut, (d, s) => {
-      screen[d] = image[s];
+      put(screen, d, image[s]);
     });
   }
 
@@ -394,14 +427,14 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    colbuffer: Uint8Array,
     screenX: number,
     screenY: number,
     pitch: number,
   ): void {
     if (this.image === null) return;
     const plot = (d: number) => {
-      screen[d] |= type;
+      colbuffer[d] |= type;
     };
     if (sx === spx && sy === spy) this.blit1(x1, y1, spx, spy, x, y, screenX, screenY, pitch, plot);
     else this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, null, plot);
@@ -417,7 +450,7 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint8Array,
+    colbuffer: Uint8Array,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -425,7 +458,7 @@ export class Bitmap {
     if (this.image === null) return 0;
     let retval = 0;
     const plot = (d: number) => {
-      retval |= screen[d] ?? 0;
+      retval |= colbuffer[d] ?? 0;
     };
     if (sx === spx && sy === spy) this.blit1(x1, y1, spx, spy, x, y, screenX, screenY, pitch, plot);
     else this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, null, plot);
