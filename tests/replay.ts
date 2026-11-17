@@ -7,11 +7,13 @@
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { decodePCX, paletteToRGBA } from '../src/engine/bitmap';
+import { Screen } from '../src/engine/screen';
 import { State } from '../src/game/constants';
 import { srand } from '../src/game/cutil';
 import { gameCycle } from '../src/game/gamecycle';
 import { G } from '../src/game/state';
-import { registerBinary } from '../src/platform/assets';
+import { registerBinary, registerImage } from '../src/platform/assets';
 import { setSoundListener } from '../src/platform/audio';
 import {
   SDLK_DOWN,
@@ -35,6 +37,32 @@ function preloadGraphics(set: string): void {
   }
 }
 
+/**
+ * Give every bitmap of a set an HD version: the PCX in the palette of
+ * konami.pcx, enlarged `scale` times by repeating pixels. Drawn on a screen of
+ * that scale it must give exactly the same picture as the bitmap itself.
+ */
+export function registerNearestHd(set: string, scale: number): void {
+  const dir = join(ROOT, 'assets', 'graphics', set);
+  const konami = decodePCX(new Uint8Array(readFileSync(join(dir, 'konami.pcx'))))!;
+  const colors = paletteToRGBA(konami.palette);
+  for (const f of readdirSync(dir)) {
+    if (!f.endsWith('.pcx')) continue;
+    const img = decodePCX(new Uint8Array(readFileSync(join(dir, f))))!;
+    const w = img.width * scale;
+    const pixels = new Uint32Array(w * img.height * scale);
+    for (let i = 0; i < pixels.length; i++) {
+      const c = img.indices[Math.floor((i % w) / scale) + Math.floor(i / w / scale) * img.width];
+      if (c !== 0) pixels[i] = colors[c];
+    }
+    registerImage(`graphics/${set}/hd/${f.replace(/\.pcx$/, '.png')}`, {
+      width: w,
+      height: img.height * scale,
+      pixels,
+    });
+  }
+}
+
 /** Sounds and music requested during the current frame (part of every frame's record). */
 let frameSounds: string[] = [];
 setSoundListener((e) => frameSounds.push(e));
@@ -47,9 +75,19 @@ function takeSounds(): string {
 const rgb = new Uint32Array(640 * 400);
 const rgbView = new Uint8Array(rgb.buffer);
 
-/** The frame as the player sees it: opaque RGB pixels (the alpha byte is ignored, as by the video output). */
-function rgbBytes(screen: Uint32Array): Uint8Array {
-  for (let i = 0; i < screen.length; i++) rgb[i] = (screen[i] | 0xff000000) >>> 0;
+/**
+ * The frame as the player sees it, as opaque RGB at game resolution (the alpha
+ * byte is ignored, as by the video output). On a scaled screen the top-left
+ * pixel of every block is taken, so a 2× rendering of the same picture hashes
+ * the same as the 1× one.
+ */
+function rgbBytes(screen: Screen): Uint8Array {
+  const px = screen.pixels;
+  if (screen.scale === 1) {
+    for (let i = 0; i < px.length; i++) rgb[i] = (px[i] | 0xff000000) >>> 0;
+  } else {
+    for (let i = 0; i < rgb.length; i++) rgb[i] = (px[screen.physical(i)] | 0xff000000) >>> 0;
+  }
   return rgbView;
 }
 
@@ -84,7 +122,7 @@ export interface ReplayResult {
   hashes: string[];
 }
 
-export function runReplay(opts: { frames: number; seed: number }): ReplayResult {
+export function runReplay(opts: { frames: number; seed: number; scale?: number }): ReplayResult {
   preloadGraphics('original');
   srand(opts.seed);
   let inputSeed = opts.seed;
@@ -93,7 +131,7 @@ export function runReplay(opts: { frames: number; seed: number }): ReplayResult 
     return inputSeed;
   };
   const keys = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_m];
-  const screen = new Uint32Array(W * H);
+  const screen = new Screen(W, H, opts.scale ?? 1);
   const hashes: string[] = [];
   let teleport = 0;
 
@@ -190,6 +228,7 @@ export function runCoverage(opts: {
   roomFrames: number;
   passageFrames: number;
   demonFrames: number;
+  scale?: number;
 }): ReplayResult {
   preloadGraphics('original');
   srand(opts.seed);
@@ -199,7 +238,7 @@ export function runCoverage(opts: {
     return inputSeed;
   };
   const keys = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_m];
-  const screen = new Uint32Array(W * H);
+  const screen = new Screen(W, H, opts.scale ?? 1);
   const hashes: string[] = [];
   const step = (randomInput: boolean) => {
     for (const k of keys) setKey(k, false);
@@ -274,7 +313,7 @@ export function runCoverage(opts: {
  * positions, run fixed input patterns (walk, jump, fall, ladders, sword) that
  * hold keys long enough to reach edges, walls and ladder ends.
  */
-export function runPlayerMoves(opts: { seed: number; roomStep: number; starts: number }): ReplayResult {
+export function runPlayerMoves(opts: { seed: number; roomStep: number; starts: number; scale?: number }): ReplayResult {
   preloadGraphics('original');
   srand(opts.seed);
   let inputSeed = opts.seed;
@@ -301,7 +340,7 @@ export function runPlayerMoves(opts: { seed: number; roomStep: number; starts: n
     [[SDLK_m], 2],
     [[SDLK_LEFT], 30],
   ];
-  const screen = new Uint32Array(W * H);
+  const screen = new Screen(W, H, opts.scale ?? 1);
   const hashes: string[] = [];
   const frame = () => {
     G.energy[0] = Math.max(G.energy[0], 8);

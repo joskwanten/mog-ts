@@ -6,6 +6,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
+import { Screen } from '../src/engine/screen';
 import { S_QUIET_LADDER, State } from '../src/game/constants';
 import { srand } from '../src/game/cutil';
 import { findLadder } from '../src/game/gameaux';
@@ -19,7 +20,7 @@ test('pressing opposite directions on a ladder does not crash', () => {
   for (const f of readdirSync(dir))
     registerBinary(`graphics/original/${f}`, new Uint8Array(readFileSync(join(dir, f))));
   srand(1);
-  const screen = new Uint32Array(640 * 400);
+  const screen = new Screen(640, 400);
   const all = [SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE];
   const frame = (keys: number[]) => {
     for (const k of all) setKey(k, false);

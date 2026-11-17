@@ -1,3 +1,4 @@
+import type { Screen } from './screen';
 import type { Bitmap } from './bitmap';
 
 /** A rectangular region of a Bitmap with a drawing hot-spot offset (port of sprites.h). */
@@ -18,7 +19,7 @@ export class Sprite {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint32Array,
+    screen: Screen,
     screenX: number,
     screenY: number,
     pitch: number,
@@ -44,7 +45,7 @@ export class Sprite {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint32Array,
+    screen: Screen,
     screenX: number,
     screenY: number,
     pitch: number,

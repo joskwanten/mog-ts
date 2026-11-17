@@ -47,22 +47,33 @@ assets/              graphics, geluid en kamers van de remake (ongewijzigd)
 reference/cpp/       de C++-bronnen, om de port regel voor regel te vergelijken
 ```
 
-De spellogica tekent elke frame in een 640×400 RGBA-framebuffer plus een 8-bit
-botsingsbuffer, zoals de remake (die in 256 kleuren tekende); de botsingsdetectie hangt
-daarvan af. De PCX-graphics worden bij het laden met het palet van `konami.pcx` omgezet
-naar RGBA, dus het beeld is pixel voor pixel gelijk aan de remake. De port is
+De spellogica rekent in 640×400 spelpixels, met een 8-bit botsingsbuffer zoals de remake;
+de botsingsdetectie hangt daarvan af. Het beeld zelf is RGBA en standaard 1280×800 (2×2
+schermpixels per spelpixel). De PCX-graphics worden bij het laden met het palet van
+`konami.pcx` omgezet naar RGBA, dus zonder HD-graphics is het beeld pixel voor pixel de
+remake, alleen twee keer zo groot.
+
+**HD-graphics.** Een grafische set kan in `assets/graphics/<set>/hd/` PNG's meeleveren
+op precies twee keer de maat van de PCX (bv. `tiles.png` van 1280×800 naast `tiles.pcx`
+van 640×400), met transparantie in het alfakanaal. Het beeld komt dan uit de PNG; de
+botsingen blijven van de PCX, dus het spel speelt exact hetzelfde. Ontbreekt een PNG, dan
+wordt die bitmap gewoon vergroot. `tools/upscale-hd.py <set>` maakt zo'n HD-set met
+[Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) (`realesrgan-ncnn-vulkan`); de
+naramura-set heeft er al een. De port is
 eerst getrouw vertaald en daarna opgeschoond: Engelse camelCase-namen (automatisch
 hernoemd via de TypeScript language service), Prettier-opmaak. Welke C++-naam bij welke
 TypeScript-naam hoort staat in [NAMES.md](NAMES.md); de werkwijze en modulekaart in
 [PORTING.md](PORTING.md).
 
-Regressietests (`npm test`, ~2½ minuut) spelen het spel met vaste seed en gescripte invoer
+Regressietests (`npm test`, ~6 minuten) spelen het spel met vaste seed en gescripte invoer
 af: alle 311 kamers, alle shrines en winkels, alle demongevechten en vaste
 bewegingspatronen van de speler. Van elk frame worden beeld, botsingsbuffer en geluid
 vergeleken met een golden master. Zo blijft opschonen veilig: één verschoven pixel of een
-ander geluid en de test faalt.
+ander geluid en de test faalt. Daarnaast moet de 2×-weergave, met en zonder (pixelgetrouw
+vergrote) HD-graphics, hetzelfde beeld geven als de 1×-weergave.
 
-URL-parameters voor ontwikkelen: `?fps=N`, `?mute`, `?autostart`, `?manual`
+URL-parameters voor ontwikkelen: `?scale=N` (schermpixels per spelpixel, standaard 2),
+`?fps=N`, `?mute`, `?autostart`, `?manual`
 (de lus staat stil; stap met `mog.step(n)` in de console).
 
 ## Licentie

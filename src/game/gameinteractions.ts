@@ -754,15 +754,8 @@ const LAVA_NEXT = new Map([
 
 export function animateTiles(tiles: Bitmap): void {
   // Water animation (water tile: 19,3), scrolling each row to the left in the tile sheet:
-  const img = tiles.getPixels()!;
-  for (let j = 0; j < TILE_SIZE_Y; j++) {
-    const row = 19 * TILE_SIZE_X + (3 * TILE_SIZE_Y + j) * SCREEN_X;
-    for (let k = 0; k < WATER_SPEED[j]; k++) {
-      const first = img[row];
-      img.copyWithin(row, row + 1, row + TILE_SIZE_X);
-      img[row + TILE_SIZE_X - 1] = first;
-    }
-  }
+  for (let j = 0; j < TILE_SIZE_Y; j++)
+    tiles.rotateRowLeft(19 * TILE_SIZE_X, 3 * TILE_SIZE_Y + j, TILE_SIZE_X, WATER_SPEED[j]);
 
   // Lava, every other frame, in the room itself:
   G.lavaState++;

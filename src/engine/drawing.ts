@@ -1,8 +1,9 @@
 /**
  * Drawing primitives (port of the parts of drawing.cpp / line_clip.cpp that
- * the game uses). They draw into the RGBA frame buffer (row stride = pitch)
- * with an RGBA colour.
+ * the game uses). They draw into the frame buffer in logical pixels with an
+ * RGBA colour.
  */
+import type { Screen } from './screen';
 
 /** C++ `int(float)`: truncate toward zero; non-finite results become 0. */
 const toInt = (f: number): number => (Number.isFinite(f) ? Math.trunc(f) : 0);
@@ -82,17 +83,10 @@ export function clipLine(
   return [x1, y1, x2, y2];
 }
 
-/** Bresenham line, clipped to the pitch × (buffer height) area. */
-export function drawLine(
-  video: Uint32Array,
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  pitch: number,
-  color: number,
-): void {
-  const clipped = clipLine(x1, y1, x2, y2, 0, 0, pitch, Math.floor(video.length / pitch));
+/** Bresenham line, clipped to the screen. */
+export function drawLine(screen: Screen, x1: number, y1: number, x2: number, y2: number, color: number): void {
+  const pitch = screen.logicalWidth;
+  const clipped = clipLine(x1, y1, x2, y2, 0, 0, pitch, screen.logicalHeight);
   if (clipped === null) return;
   [x1, y1, x2, y2] = clipped;
 
@@ -118,7 +112,7 @@ export function drawLine(
 
   if (dX > dY) {
     for (let a = 0; a <= dX; a++) {
-      video[ptr] = color;
+      screen.plot(ptr, color);
       errterm += dY;
       if (errterm >= dX) {
         errterm -= dX;
@@ -128,7 +122,7 @@ export function drawLine(
     }
   } else {
     for (let a = 0; a <= dY; a++) {
-      video[ptr] = color;
+      screen.plot(ptr, color);
       errterm += dX;
       if (errterm >= dY) {
         errterm -= dY;
@@ -140,40 +134,21 @@ export function drawLine(
 }
 
 /** Filled rectangle. */
-export function fillRect(
-  screen: Uint32Array,
-  x: number,
-  y: number,
-  dx: number,
-  dy: number,
-  pitch: number,
-  color: number,
-): void {
+export function fillRect(screen: Screen, x: number, y: number, dx: number, dy: number, color: number): void {
   if (dx <= 0) return;
-  for (let i = 0; i < dy; i++) {
-    const start = x + (y + i) * pitch;
-    screen.fill(color, start, start + dx);
-  }
+  for (let i = 0; i < dy; i++) screen.fillSpan(x + (y + i) * screen.logicalWidth, color, dx);
 }
 
 /** Rectangle outline. */
-export function strokeRect(
-  screen: Uint32Array,
-  x: number,
-  y: number,
-  dx: number,
-  dy: number,
-  pitch: number,
-  color: number,
-): void {
-  drawLine(screen, x, y, x + dx, y, pitch, color);
-  drawLine(screen, x + dx, y, x + dx, y + dy, pitch, color);
-  drawLine(screen, x + dx, y + dy, x, y + dy, pitch, color);
-  drawLine(screen, x, y + dy, x, y, pitch, color);
+export function strokeRect(screen: Screen, x: number, y: number, dx: number, dy: number, color: number): void {
+  drawLine(screen, x, y, x + dx, y, color);
+  drawLine(screen, x + dx, y, x + dx, y + dy, color);
+  drawLine(screen, x + dx, y + dy, x, y + dy, color);
+  drawLine(screen, x, y + dy, x, y, color);
 }
 
-/** C `memset(buf + offset, value, count)` (per element: a pixel of the frame buffer or the collision buffer). */
-export function memset(buf: Uint8Array | Uint32Array, offset: number, value: number, count: number): void {
+/** C `memset(buf + offset, value, count)` on the collision buffer. */
+export function memset(buf: Uint8Array, offset: number, value: number, count: number): void {
   if (count <= 0) return;
   buf.fill(value, Math.max(0, offset), Math.max(0, offset + count));
 }

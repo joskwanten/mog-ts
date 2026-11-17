@@ -18,7 +18,7 @@ passes:
 | C++ file                        | TypeScript module                                                | Main exports                                                                                                                                                                       |
 | ------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | bitmaps.cpp, sprites.h, tiles.h | `src/engine/bitmap.ts`, `sprite.ts`, `tile.ts`                   | `Bitmap` (RGBA; `decodePCX`, `rgba`), `Sprite`, `Tile`                                                                                                                             |
-| drawing.cpp, line_clip.cpp      | `src/engine/drawing.ts`                                          | `fillRect`, `strokeRect`, `drawLine`, `memset` (RGBA colours)                                                                                                                      |
+| drawing.cpp, line_clip.cpp      | `src/engine/drawing.ts`                                          | `fillRect`, `strokeRect`, `drawLine` on a `Screen`; `memset`                                                                                                                       |
 | keyboard.cpp, SDL keys          | `src/platform/keyboard.ts`                                       | `SDLK_*`, `getKeyboardState`, `keyName`                                                                                                                                            |
 | sound.cpp                       | `src/platform/audio.ts`                                          | `playSound`, `createSound`, `playMusic`, `stopMusic`, …                                                                                                                            |
 | filehandling.cpp, path.cpp      | `src/platform/assets.ts`                                         | `readText`, `readBinary`, `GRAPHIC_SETS`, `SOUND_SETS`                                                                                                                             |
@@ -46,9 +46,11 @@ remake (which used globals); loaded bitmaps, tile numbers and sounds are in
 `src/game/resources.ts`. Module-private state is a module-level `let`. Game states are
 `State.*` constants.
 
-**Frame buffer and collision.** Every frame the game draws into a 640×400 RGBA buffer
-(`Uint32Array`, packed as in `ImageData`; the alpha byte is ignored on output) and paints
-the same pixels' collision types (`T_WALL`, `T_PLAYER`, …) into the 8-bit `G.collision`.
+**Frame buffer and collision.** The game works in logical pixels (640×400). Every frame
+it draws into a `Screen` (`src/engine/screen.ts`): RGBA pixels (packed as in `ImageData`;
+the alpha byte is ignored on output), `scale`×`scale` of them per logical pixel (default 2:
+1280×800). It paints the same logical pixels' collision types (`T_WALL`, `T_PLAYER`, …)
+into the 8-bit `G.collision`.
 Collision tests read that buffer, so the order of drawing and testing is behaviour. Do not
 reorder statements without the replay tests.
 
@@ -57,6 +59,13 @@ reorder statements without the replay tests.
 becomes transparent (stored as 0). A pixel that is not 0 is drawn — blended when its
 alpha is below 255 — and paints the collision buffer. Colours the game gives as palette
 indices (bars, map, screen clears) go through `paletteColor(i)`.
+
+**HD graphics.** A bitmap may have an HD version (`Bitmap.hd`, loaded from
+`graphics/<set>/hd/<name>.png`, an integer multiple of the PCX size). The collision buffer
+always uses the PCX. On a screen of the HD version's scale, colour is drawn from the HD
+bitmap with the same blit in physical pixels; otherwise each logical pixel becomes a block.
+Code that changes a bitmap in place (water, dissolving demons) uses `clearRect` /
+`rotateRowLeft`, which change the HD version too; per-pixel copies use `copyPixel`.
 
 **Integer semantics.** C `int` arithmetic stays integer: every `int / int` is
 `idiv(a, b)`; `int(float)` is `toInt(x)`; `rand()` comes from `cutil.ts` (seedable).
@@ -79,7 +88,10 @@ RGB) and the collision buffer plus the sounds and music requested, and compare w
 - `tests/player.test.ts` — fixed movement patterns (walk, jump, fall, ladders, sword,
   weapon) from random start positions in every 6th room.
 - `tests/tiles.test.ts` — the complete tile table (tile numbers are used by the room files).
-- `tests/bitmap.test.ts` — RGBA conversion, transparency, alpha blending.
+- `tests/bitmap.test.ts` — RGBA conversion, transparency, alpha blending, HD drawing.
+- `tests/scale2.test.ts` — the replay at scale 2 (blocks) equals the 1× golden.
+- `tests/hd.test.ts` — the coverage run at scale 2 from HD bitmaps (the PCX enlarged by
+  repeating pixels) equals the 1× golden.
 - `tests/passwords.test.ts` — password round trips.
 
 After an intended behaviour change: `UPDATE_GOLDEN=1 npx vitest run`, and review why frames

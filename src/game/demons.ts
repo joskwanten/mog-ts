@@ -11,6 +11,8 @@
  * (its baseTile). Its `size` is its life; `state` is its AI state, `state2` mostly
  * a frame counter and `state3` a per-demon extra.
  */
+import type { Bitmap } from '../engine/bitmap';
+import type { Screen } from '../engine/screen';
 import { Tile } from '../engine/tile';
 import { playSound } from '../platform/audio';
 import {
@@ -67,7 +69,7 @@ function soundSubstMusicNow(_f: string): void {
 const DEMON_APPEARS = 160;
 
 /** Replay the intro up to `state` after the graphics were reloaded (the bitmaps lost the dissolve). */
-export function redoDemonIntro(state: number, screen: Uint32Array | null): void {
+export function redoDemonIntro(state: number, screen: Screen | null): void {
   const frames = state < 193 ? state : 160;
   for (let i = 0; i < frames; i++) demonIntro(i, screen);
 }
@@ -81,23 +83,20 @@ const DISSOLVE_Y = [3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 1, 2, 2, 2, 1, 1];
 
 /**
  * Dissolve step `step` (0–15) on the `cols`×`rows` tiles of a bitmap from tile
- * column `col` (row 0). Rows are SCREEN_X pixels apart, as in the C++.
+ * column `col` (row 0); the bitmaps are SCREEN_X pixels wide, as the C++ assumed.
  */
-function dissolveTiles(img: Uint32Array, step: number, col: number, cols: number, rows: number): void {
+function dissolveTiles(bmp: Bitmap, step: number, col: number, cols: number, rows: number): void {
   const half = 4 * TILE_UNIT;
   const sx = DISSOLVE_X[step] * TILE_UNIT;
   const sy = DISSOLVE_Y[step] * TILE_UNIT;
   for (let tx = 0; tx < cols; tx++) {
     for (let ty = 0; ty < rows; ty++) {
-      for (let i = 0; i < TILE_UNIT; i++) {
-        for (let j = 0; j < TILE_UNIT; j++) {
-          const offs = TILE_SIZE_X * (col + tx) + sx + (sy + i + TILE_SIZE_Y * ty) * SCREEN_X + j;
-          img[offs] = 0;
-          img[offs + half] = 0;
-          img[offs + half * SCREEN_X] = 0;
-          img[offs + half + half * SCREEN_X] = 0;
-        }
-      }
+      const x = TILE_SIZE_X * (col + tx) + sx;
+      const y = sy + TILE_SIZE_Y * ty;
+      bmp.clearRect(x, y, TILE_UNIT, TILE_UNIT);
+      bmp.clearRect(x + half, y, TILE_UNIT, TILE_UNIT);
+      bmp.clearRect(x, y + half, TILE_UNIT, TILE_UNIT);
+      bmp.clearRect(x + half, y + half, TILE_UNIT, TILE_UNIT);
     }
   }
 }
@@ -117,7 +116,7 @@ const DEMON_SHEETS = new Map<number, { col: number; cols: number; rows: number }
 ]);
 
 /** `screen` may be null (C++ passes 0 from redoDemonIntro). */
-export function demonIntro(state: number, screen: Uint32Array | null): void {
+export function demonIntro(state: number, screen: Screen | null): void {
   if (state === 1) {
     gfx.back = loadBitmap(`back${G.world}.pcx`);
     G.demonBackState = 0;
@@ -128,7 +127,7 @@ export function demonIntro(state: number, screen: Uint32Array | null): void {
   if (state < 32 && screen !== null && (state & 0x02) !== 0) {
     for (let i = GAME_VIEW_Y; i < SCREEN_Y; i++) {
       for (let j = 0, offs = i * SCREEN_X; j < SCREEN_X; j++, offs++) {
-        if (((j + i) & 0x01) === 0) screen[offs] = paletteColor(255);
+        if (((j + i) & 0x01) === 0) screen.plot(offs, paletteColor(255));
       }
     }
   }
@@ -136,14 +135,13 @@ export function demonIntro(state: number, screen: Uint32Array | null): void {
   // Make the tiles disappear:
   if (state >= 32 && state < 64) {
     const step = idiv(state - 32, 2);
-    const img = gfx.tiles!.getPixels()!;
-    dissolveTiles(img, step, 34, 4, 2);
-    dissolveTiles(img, step, 38, 2, 3);
+    dissolveTiles(gfx.tiles!, step, 34, 4, 2);
+    dissolveTiles(gfx.tiles!, step, 38, 2, 3);
   }
 
   // Make the monster's symbol disappear:
   if (state >= 64 && state < 96) {
-    dissolveTiles(gfx.tiles2!.getPixels()!, idiv(state - 64, 2), 0, 8, 8);
+    dissolveTiles(gfx.tiles2!, idiv(state - 64, 2), 0, 8, 8);
     G.smokeCount = 0;
   }
 
@@ -191,29 +189,25 @@ export function demonIntro(state: number, screen: Uint32Array | null): void {
   // Make the monster disappear:
   if (state >= 162 && state < 194 && gfx.demon !== null) {
     const step = idiv(state - 162, 2);
-    const img = gfx.demon.getPixels()!;
-
     if (G.world === 1) G.objects[G.demonObject].state = tileIds.demon + 1;
     const sheet = DEMON_SHEETS.get(G.world);
-    if (sheet !== undefined) dissolveTiles(img, step, sheet.col, sheet.cols, sheet.rows);
+    if (sheet !== undefined) dissolveTiles(gfx.demon, step, sheet.col, sheet.cols, sheet.rows);
   }
 }
 
 /** The order in which the pixels of each 4×4 block fade in (an ordered dither). */
 const FADE_IN_ORDER = [0, 8, 2, 9, 12, 4, 14, 6, 3, 10, 1, 11, 15, 7, 13, 5];
 
-export function drawDemonBackground(screen: Uint32Array, pitch: number): void {
+export function drawDemonBackground(screen: Screen, pitch: number): void {
   const backBmp = gfx.back;
   if (backBmp === null || G.fightingDemon <= 96) return;
 
   if (G.demonBackState < 16) {
     // Fading in: draw the pixels whose turn has come (colour 0 is transparent).
-    const img = backBmp.getPixels()!;
     for (let ty = 0; ty < SCREEN_Y - GAME_VIEW_Y; ty++) {
       for (let tx = 0; tx < SCREEN_X; tx++) {
         if (FADE_IN_ORDER[(ty % 4) * 4 + (tx % 4)] <= G.demonBackState) {
-          const pixel = img[tx + ty * pitch];
-          if (pixel !== 0) screen[tx + (ty + GAME_VIEW_Y) * pitch] = pixel;
+          backBmp.copyPixel(tx + ty * pitch, screen, tx + (ty + GAME_VIEW_Y) * pitch);
         }
       }
     }

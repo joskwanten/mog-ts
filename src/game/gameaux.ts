@@ -1,12 +1,13 @@
+import type { Screen } from '../engine/screen';
 import { gfx, sfx, tileIds } from './resources';
 import { drawTile, drawTileMask, drawTileNative, drawTileNoMask } from './tiledraw';
 /**
  * Port of gameaux.cpp: game initialisation, resource (re)loading, room
  * loading, map/status drawing and assorted helpers.
  */
-import { Bitmap, decodePCX, type IndexedImage, paletteToRGBA, rgba } from '../engine/bitmap';
+import { Bitmap, decodePCX, paletteToRGBA, rgba } from '../engine/bitmap';
 import { fillRect, memset } from '../engine/drawing';
-import { GRAPHIC_SETS, SOUND_SETS, readBinary } from '../platform/assets';
+import { GRAPHIC_SETS, SOUND_SETS, readBinary, readImage } from '../platform/assets';
 import { createSound, releaseMusicTemporarily, setSfxGain, setSoundPath, stopMusic } from '../platform/audio';
 import type { SDLKey } from '../platform/keyboard';
 import {
@@ -243,7 +244,7 @@ export function newGame(): void {
 }
 
 /** Draw background tile `t` in room cell (col, row). */
-function drawRoomTile(screen: Uint32Array, t: number, col: number, row: number): void {
+function drawRoomTile(screen: Screen, t: number, col: number, row: number): void {
   drawTile(screen, t, GAME_VIEW_X + col * TILE_SIZE_X, GAME_VIEW_Y + row * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y);
 }
 
@@ -255,7 +256,7 @@ const WORLD5_ROOM13_PATTERN = [
   [130, 129],
 ];
 
-function drawRoomBackground(screen: Uint32Array): void {
+function drawRoomBackground(screen: Screen): void {
   const roomTiles = G.roomTiles!;
   const width = G.roomWidth;
   const height = G.roomHeight;
@@ -295,7 +296,7 @@ function drawRoomBackground(screen: Uint32Array): void {
 }
 
 /** The castle levers in the current room. */
-function drawLevers(screen: Uint32Array): void {
+function drawLevers(screen: Screen): void {
   for (let i = 0; i < MAX_LEVERS; i++) {
     if (G.roomX === G.leverRoomX[i] && G.roomY === G.leverRoomY[i]) {
       drawTile(
@@ -313,7 +314,7 @@ function drawLevers(screen: Uint32Array): void {
 // type=0 normal
 // type=1 only background
 // type=2 only objects
-export function drawMap(screen: Uint32Array, type: number): void {
+export function drawMap(screen: Screen, type: number): void {
   if (type !== 2) drawRoomBackground(screen);
 
   if (type !== 1) {
@@ -330,7 +331,7 @@ export function drawMap(screen: Uint32Array, type: number): void {
 }
 
 /** Draw a room object that is not an enemy (doors, items, weapons, ...); enemies go to drawEnemy. */
-function drawObject(screen: Uint32Array, o: GameObject): void {
+function drawObject(screen: Screen, o: GameObject): void {
   const x = GAME_VIEW_X + o.x;
   const y = GAME_VIEW_Y + o.y;
 
@@ -455,7 +456,7 @@ function drawObject(screen: Uint32Array, o: GameObject): void {
 }
 
 /** A key door: three tiles high; opening (state < 0) it sinks into the floor. */
-function drawKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawKeyDoor(screen: Screen, o: GameObject, x: number, y: number): void {
   const drawRow = (row: number): void =>
     drawTile(screen, tileIds.keydoor, x, y + row * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y);
 
@@ -472,7 +473,7 @@ function drawKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: number): 
  * A world key door. Opening (state < 0) it swings open in two frames, 2 and
  * then 3 tiles wide; to the right if state2 is 0, else to the left.
  */
-function drawWorldKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawWorldKeyDoor(screen: Screen, o: GameObject, x: number, y: number): void {
   if (o.state >= 0) {
     drawTile(screen, tileIds.wkeydoor, x, y, TILE_SIZE_X, TILE_SIZE_Y * 3);
     return;
@@ -488,7 +489,7 @@ function drawWorldKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: numb
  * second set). Opening (state < 0) it turns through frames 1, 2, 3 (state2 0)
  * or 3, 2, 1; frame 2 is 3 tiles wide, the others 2.
  */
-function drawWorldNoKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawWorldNoKeyDoor(screen: Screen, o: GameObject, x: number, y: number): void {
   const base = tileIds.wnokeydoor + (o.type === T_WNOKEYDOOR2 || o.type === T_WNOKEYDOOR3 ? 4 : 0);
 
   if (o.state >= 0) {
@@ -508,7 +509,7 @@ function drawWorldNoKeyDoor(screen: Uint32Array, o: GameObject, x: number, y: nu
  * An item lying in the room, by its number: -1 coins, -2 key, -3 arrows,
  * 0..31 items, 32..35 weapons, 36 cross, 37 world key, 38.. world items.
  */
-function drawItem(screen: Uint32Array, item: number, x: number, y: number): void {
+function drawItem(screen: Screen, item: number, x: number, y: number): void {
   if (item === -1) drawTile(screen, tileIds.coin, x, y);
   else if (item === -2) drawTile(screen, tileIds.key, x, y);
   else if (item === -3) drawTile(screen, tileIds.arrow, x, y);
@@ -526,7 +527,7 @@ function drawItem(screen: Uint32Array, item: number, x: number, y: number): void
  * (nothing while tile < 0). With `noMask` it paints no collision: the item
  * that makes this enemy harmless is owned.
  */
-function drawEnemyNative(screen: Uint32Array, o: GameObject, noMask = false): void {
+function drawEnemyNative(screen: Screen, o: GameObject, noMask = false): void {
   if (o.tile < 0) return;
   const t = o.baseTile + o.tile;
   const x = GAME_VIEW_X + o.x + o.xoffs;
@@ -536,30 +537,14 @@ function drawEnemyNative(screen: Uint32Array, o: GameObject, noMask = false): vo
 }
 
 /** A fire beam to the right: `head` at (x, y), `n` times `body`, then `tip`. */
-function drawBeamRight(
-  screen: Uint32Array,
-  head: number,
-  body: number,
-  tip: number,
-  x: number,
-  y: number,
-  n: number,
-): void {
+function drawBeamRight(screen: Screen, head: number, body: number, tip: number, x: number, y: number, n: number): void {
   drawTileNative(screen, head, x, y);
   for (let j = 0; j < n; j++) drawTileNative(screen, body, x + (j + 2) * TILE_SIZE_X, y);
   drawTileNative(screen, tip, x + (n + 2) * TILE_SIZE_X, y);
 }
 
 /** A fire beam to the left: `head` at (x, y), `n` times `body`, then `tip`. */
-function drawBeamLeft(
-  screen: Uint32Array,
-  head: number,
-  body: number,
-  tip: number,
-  x: number,
-  y: number,
-  n: number,
-): void {
+function drawBeamLeft(screen: Screen, head: number, body: number, tip: number, x: number, y: number, n: number): void {
   drawTileNative(screen, head, x, y);
   for (let j = 0; j < n; j++) drawTileNative(screen, body, x - (j + 1) * TILE_SIZE_X, y);
   drawTileNative(screen, tip, x - (n + 2) * TILE_SIZE_X, y);
@@ -570,7 +555,7 @@ const LIGHTNING_START = [6, 10, 15, 3, 3];
 const LIGHTNING_END = [5, 5, 10, 13, 13];
 
 /** Draw a T_ENEMY object at screen position (x, y) (without xoffs/yoffs). */
-function drawEnemy(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawEnemy(screen: Screen, o: GameObject, x: number, y: number): void {
   const b = o.baseTile;
 
   switch (o.enemy) {
@@ -763,7 +748,7 @@ function drawEnemy(screen: Uint32Array, o: GameObject, x: number, y: number): vo
 }
 
 /** The skeleton: rising from the ground (size 7..1), else a body plus the half sprite in front of it. */
-function drawSkeleton(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawSkeleton(screen: Screen, o: GameObject, x: number, y: number): void {
   const b = o.baseTile;
 
   switch (o.size) {
@@ -817,7 +802,7 @@ function drawSkeleton(screen: Uint32Array, o: GameObject, x: number, y: number):
  * The smoke cloud (size 0: small, else big) grows and shrinks with state2
  * (1..7); it is harmless (no collision) once item 21 is owned.
  */
-function drawSmoke(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawSmoke(screen: Screen, o: GameObject, x: number, y: number): void {
   const draw = G.items[21] ? drawTileNoMask : drawTile;
   const t = o.size === 0 ? o.baseTile : o.baseTile + 4;
   const late = o.state % 6 >= 3; // second half of the animation step
@@ -842,7 +827,7 @@ function drawSmoke(screen: Uint32Array, o: GameObject, x: number, y: number): vo
 }
 
 /** The knight (frame state2) and, when it faces the player, its second sprite in front. */
-function drawKnight(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawKnight(screen: Screen, o: GameObject, x: number, y: number): void {
   const b = o.baseTile;
 
   drawTile(screen, b + o.state2, x, y);
@@ -857,7 +842,7 @@ function drawKnight(screen: Uint32Array, o: GameObject, x: number, y: number): v
 }
 
 /** The lizard's tongue: grows for state2 0..28 and shrinks back; up (state 0) or down. */
-function drawLizardTongue(screen: Uint32Array, o: GameObject, x: number, y: number): void {
+function drawLizardTongue(screen: Screen, o: GameObject, x: number, y: number): void {
   const b = o.baseTile;
   let n = o.state2 <= 28 ? idiv(o.state2, 2) + 2 : idiv(48 - o.state2, 2) + 2;
   if (n >= 12) n = 12;
@@ -871,16 +856,16 @@ function drawLizardTongue(screen: Uint32Array, o: GameObject, x: number, y: numb
 }
 
 /** One character's energy bar (with the maximum-energy marker) and experience bar. */
-function drawCharacterBars(screen: Uint32Array, c: number, x: number, colour: number): void {
-  fillRect(screen, x + Math.min(G.maxEnergy[c], 96), 20, 2, 8, SCREEN_X, paletteColor(235));
-  fillRect(screen, x, 20, Math.max(0, Math.min(G.shownEnergy[c], 96)), 8, SCREEN_X, paletteColor(colour));
+function drawCharacterBars(screen: Screen, c: number, x: number, colour: number): void {
+  fillRect(screen, x + Math.min(G.maxEnergy[c], 96), 20, 2, 8, paletteColor(235));
+  fillRect(screen, x, 20, Math.max(0, Math.min(G.shownEnergy[c], 96)), 8, paletteColor(colour));
   if (G.shownExperience[c] > 0) {
-    fillRect(screen, x, 36, Math.min(G.shownExperience[c], 96), 8, SCREEN_X, paletteColor(colour));
+    fillRect(screen, x, 36, Math.min(G.shownExperience[c], 96), 8, paletteColor(colour));
   }
 }
 
-export function drawStats(screen: Uint32Array): void {
-  memset(screen, SCREEN_X * TILE_SIZE_Y * 3, paletteColor(0), SCREEN_X * TILE_SIZE_Y);
+export function drawStats(screen: Screen): void {
+  screen.fillSpan(SCREEN_X * TILE_SIZE_Y * 3, paletteColor(0), SCREEN_X * TILE_SIZE_Y);
 
   drawTile(screen, tileIds.stats, GAME_VIEW_X + TILE_SIZE_X * 2, 0, TILE_SIZE_X * 30, TILE_SIZE_Y * 3);
 
@@ -958,11 +943,11 @@ const GLYPHS: Record<string, [number, number]> = {
 for (let i = 0; i < 26; i++) GLYPHS[String.fromCharCode(65 + i)] = [i, 12];
 for (let i = 0; i < 10; i++) GLYPHS[String(i)] = [26 + i, 12];
 
-function printText(str: string, x: number, y: number, screen: Uint32Array, opaque: boolean): void {
+function printText(str: string, x: number, y: number, screen: Screen, opaque: boolean): void {
   const font = gfx.tiles!;
   for (let i = 0; i < str.length; i++) {
     const cx = x + i * TILE_SIZE_X;
-    if (opaque) fillRect(screen, cx, y, TILE_SIZE_X, TILE_SIZE_Y, SCREEN_X, paletteColor(0));
+    if (opaque) fillRect(screen, cx, y, TILE_SIZE_X, TILE_SIZE_Y, paletteColor(0));
     const glyph = GLYPHS[str[i]];
     if (glyph) {
       font.drawSprite(
@@ -984,12 +969,12 @@ function printText(str: string, x: number, y: number, screen: Uint32Array, opaqu
 }
 
 /** Draw text with the tile font (transparent background). */
-export function tilePrint(str: string, x: number, y: number, screen: Uint32Array): void {
+export function tilePrint(str: string, x: number, y: number, screen: Screen): void {
   printText(str, x, y, screen, false);
 }
 
 /** Draw text with the tile font on a black background. */
-export function tilePrintOpaque(str: string, x: number, y: number, screen: Uint32Array): void {
+export function tilePrintOpaque(str: string, x: number, y: number, screen: Screen): void {
   printText(str, x, y, screen, true);
 }
 
@@ -1384,26 +1369,19 @@ const ITEMS_MAP_MARKS: readonly (readonly [number, number])[] = [
 ];
 
 /** Fill room (i, j) of the world `map` map. */
-function fillMapRoom(screen: Uint32Array, map: number, i: number, j: number, colour: number): void {
+function fillMapRoom(screen: Screen, map: number, i: number, j: number, colour: number): void {
   fillRect(
     screen,
     GAME_VIEW_X + TILE_SIZE_X * 3 + (ITEMS_MAP_OFFSET[map - 1] + i) * TILE_SIZE_X,
     GAME_VIEW_Y + 15 * TILE_SIZE_Y + idiv(j * TILE_SIZE_Y, 2),
     TILE_SIZE_X - TILE_UNIT,
     idiv(TILE_SIZE_X, 2) - TILE_UNIT,
-    SCREEN_X,
     paletteColor(colour),
   );
 }
 
 /** The world map on the items screen: the rooms, the marked room (with item 13) and the player's room. */
-export function drawItemsMap(
-  map: number,
-  mapX: number,
-  mapY: number,
-  selfindicator: boolean,
-  screen: Uint32Array,
-): void {
+export function drawItemsMap(map: number, mapX: number, mapY: number, selfindicator: boolean, screen: Screen): void {
   if (map >= 1 && map <= 10) {
     const rooms = drawItemsMapMaps[map - 1];
     for (let j = 0; j < 9; j++) {
@@ -1466,23 +1444,25 @@ export function paletteColor(i: number): number {
 /**
  * Load a PCX from the active graphics set, falling back to the default set.
  * Like the remake, every bitmap is shown in the palette of konami.pcx (loaded
- * first), so the indexed pixels are converted to RGBA with G.palette.
+ * first), so the indexed pixels are converted to RGBA with G.palette. An HD
+ * version (`hd/<name>.png` next to the PCX) is attached when there is one.
  */
 export function loadBitmap(name: string): Bitmap | null {
-  const tryLoad = (path: string): IndexedImage | null => {
-    const data = readBinary(path);
-    return data === null ? null : decodePCX(data);
-  };
-
-  const img = tryLoad(G.graphicsPath + name) ?? tryLoad(G.defaultGraphicsPath + name);
-  if (img === null) {
-    console.error(`ERROR: file ${name} not found.`);
-    return null;
+  for (const dir of [G.graphicsPath, G.defaultGraphicsPath]) {
+    const data = readBinary(dir + name);
+    const img = data === null ? null : decodePCX(data);
+    if (img === null) continue;
+    // (the C++ only copied the palette on the default-path branch; loadPalette()
+    // set the screen palette from the active set via SDL)
+    if (name === 'konami.pcx') G.palette.set(img.palette);
+    const bmp = Bitmap.fromIndexed(img, paletteToRGBA(G.palette));
+    const hd = readImage(`${dir}hd/${name.replace(/\.pcx$/, '.png')}`);
+    // A copy: the game changes bitmaps in place (water, dissolving demons).
+    if (hd !== null) bmp.hd = Bitmap.fromRGBA(hd.width, hd.height, hd.pixels.slice());
+    return bmp;
   }
-  // (the C++ only copied the palette on the default-path branch; loadPalette()
-  // set the screen palette from the active set via SDL)
-  if (name === 'konami.pcx') G.palette.set(img.palette);
-  return Bitmap.fromIndexed(img, paletteToRGBA(G.palette));
+  console.error(`ERROR: file ${name} not found.`);
+  return null;
 }
 
 export function reloadAll(): void {

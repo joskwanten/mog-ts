@@ -8,10 +8,16 @@
  * separate and stays 8-bit: every pixel is a bit-set of collision types
  * (T_WALL, T_PLAYER, ...).
  *
+ * A bitmap can have an HD version (`hd`): the same picture at an integer
+ * multiple of its size. The collision buffer always uses the bitmap itself;
+ * a frame buffer with that scale draws from the HD version (see drawColour).
+ *
  * The scaled blitters keep the original Bresenham-style stepping exactly,
  * including its quirks (e.g. `spy >> 2` as initial error when shrinking),
  * because collision detection depends on which pixels get touched.
  */
+
+import type { Screen } from './screen';
 
 /** Pack a colour (0..255 per component) as an RGBA pixel. */
 export function rgba(r: number, g: number, b: number, a = 255): number {
@@ -95,6 +101,8 @@ export class Bitmap {
   private image: Uint32Array | null = null;
   private width = 0;
   private height = 0;
+  /** The same picture at a higher resolution (an integer multiple of the size), or null. */
+  hd: Bitmap | null = null;
 
   /** An indexed image in the colours of `colors` (default: its own palette); index 0 is transparent. */
   static fromIndexed(img: IndexedImage, colors = paletteToRGBA(img.palette)): Bitmap {
@@ -127,106 +135,156 @@ export class Bitmap {
     return this.height;
   }
 
+  /** The HD version if it is exactly `scale` times this bitmap's size. */
+  private hdFor(scale: number): Bitmap | null {
+    const hd = this.hd;
+    return hd !== null && hd.width === this.width * scale && hd.height === this.height * scale ? hd : null;
+  }
+
+  /** The scale of the HD version relative to this bitmap (0: none). */
+  private hdScale(): number {
+    return this.hd === null ? 0 : this.hd.width / this.width;
+  }
+
+  /** Make the w×h rectangle at (x, y) transparent (also in the HD version). */
+  clearRect(x: number, y: number, w: number, h: number): void {
+    const image = this.image;
+    if (image === null) return;
+    for (let r = 0; r < h; r++) image.fill(0, x + (y + r) * this.width, x + w + (y + r) * this.width);
+    const k = this.hdScale();
+    if (k > 0) this.hd!.clearRect(x * k, y * k, w * k, h * k);
+  }
+
+  /** Rotate the `w` pixels of row `y` from column `x` left by `n` (also in the HD version). */
+  rotateRowLeft(x: number, y: number, w: number, n: number): void {
+    const image = this.image;
+    if (image === null) return;
+    const row = x + y * this.width;
+    for (let k = 0; k < n; k++) {
+      const first = image[row];
+      image.copyWithin(row, row + 1, row + w);
+      image[row + w - 1] = first;
+    }
+    const k = this.hdScale();
+    if (k > 0) for (let r = 0; r < k; r++) this.hd!.rotateRowLeft(x * k, y * k + r, w * k, n * k);
+  }
+
+  /**
+   * Copy logical pixel `s` of this bitmap to logical pixel `d` of the screen,
+   * unless it is transparent (an HD screen gets the matching HD block).
+   */
+  copyPixel(s: number, screen: Screen, d: number): void {
+    const image = this.image;
+    if (image === null || image[s] === 0) return;
+    const k = screen.scale;
+    const hd = k === 1 ? null : this.hdFor(k);
+    if (hd === null) {
+      screen.plot(d, image[s]);
+      return;
+    }
+    const sx = s % this.width;
+    const sy = (s - sx) / this.width;
+    const src = sy * k * hd.width + sx * k;
+    const dst = screen.physical(d);
+    for (let r = 0; r < k; r++) {
+      for (let q = 0; q < k; q++) {
+        const p = hd.image![src + r * hd.width + q];
+        if (p !== 0) put(screen.pixels, dst + r * screen.width + q, p);
+      }
+    }
+  }
+
   /** Draw the whole bitmap scaled to `sx`×`sy` at (x, y). */
   draw(
     x: number,
     y: number,
     sx: number,
     sy: number,
-    screen: Uint32Array,
+    screen: Screen,
     screenX: number,
     screenY: number,
     pitch: number,
   ): void {
+    this.drawColour(0, 0, this.width, this.height, x, y, sx, sy, screen, screenX, screenY, pitch, null);
+  }
+
+  /**
+   * Draw the source rectangle (x1, y1, spx, spy) scaled to (x, y, sx, sy), in
+   * logical pixels (`screenX`×`screenY`, row stride `pitch`), with `cut` rows
+   * hidden (see blit) or null.
+   *
+   * On a screen with scale 1 this is the remake's blit. On a larger screen it
+   * draws the same picture at the higher resolution: from the HD version of
+   * the bitmap when there is one of exactly that scale (the same blit, in
+   * physical pixels), otherwise every logical pixel becomes a scale×scale block.
+   */
+  private drawColour(
+    x1: number,
+    y1: number,
+    spx: number,
+    spy: number,
+    x: number,
+    y: number,
+    sx: number,
+    sy: number,
+    screen: Screen,
+    screenX: number,
+    screenY: number,
+    pitch: number,
+    cut: number | null,
+  ): void {
     const image = this.image;
     if (image === null) return;
-    const srcW = this.width;
-    const srcH = this.height;
-    let xError: number, yError: number, xt: number, yt: number, offso: number, offsd: number;
-
-    if (sy > srcH) {
-      yError = sy >> 1;
-      offso = 0;
-      offsd = y * pitch;
-      yt = 0;
-      for (let i = 0; i < sy; i++) {
-        if (i + y >= 0 && i + y < screenY && yt < srcH) {
-          if (sx > srcW) {
-            xError = sx >> 1;
-            xt = 0;
-            for (let j = 0; j < sx; j++) {
-              if (j + x >= 0 && j + x < screenX && xt < srcW && image[xt + offso] !== 0)
-                put(screen, x + j + offsd, image[xt + offso]);
-              xError -= srcW;
-              if (xError < 0) {
-                xError += sx;
-                xt++;
-              }
-            }
-          } else {
-            xError = srcW >> 1;
-            xt = 0;
-            for (let j = 0; j < srcW; j++) {
-              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0)
-                put(screen, x + xt + offsd, image[j + offso]);
-              xError -= sx;
-              if (xError < 0) {
-                xError += srcW;
-                xt++;
-              }
-            }
-          }
-        }
-        yError -= srcH;
-        offsd += pitch;
-        if (yError < 0) {
-          yError += sy;
-          yt++;
-          offso += srcW;
-        }
-      }
+    const out = screen.pixels;
+    const k = screen.scale;
+    const hd = k === 1 ? null : this.hdFor(k);
+    if (hd !== null) {
+      const hdImage = hd.image!;
+      hd.blitAny(
+        x1 * k,
+        y1 * k,
+        spx * k,
+        spy * k,
+        x * k,
+        y * k,
+        sx * k,
+        sy * k,
+        screenX * k,
+        screenY * k,
+        screen.width,
+        cut === null ? null : cut * k,
+        (d, s) => put(out, d, hdImage[s]),
+      );
+    } else if (k === 1) {
+      this.blitAny(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, cut, (d, s) => put(out, d, image[s]));
     } else {
-      yError = srcH >> 2;
-      offso = 0;
-      offsd = y * pitch;
-      yt = 0;
-      for (let i = 0; i < srcH; i++) {
-        if (yt + y >= 0 && yt + y < screenY) {
-          if (sx > srcW) {
-            xError = sx >> 1;
-            xt = 0;
-            for (let j = 0; j < sx; j++) {
-              if (j + x >= 0 && j + x < screenX && xt < srcW && image[xt + offso] !== 0)
-                put(screen, x + j + offsd, image[xt + offso]);
-              xError -= srcW;
-              if (xError < 0) {
-                xError += sx;
-                xt++;
-              }
-            }
-          } else {
-            xError = srcW >> 1;
-            xt = 0;
-            for (let j = 0; j < srcW; j++) {
-              if (xt + x >= 0 && xt + x < screenX && image[j + offso] !== 0)
-                put(screen, x + xt + offsd, image[j + offso]);
-              xError -= sx;
-              if (xError < 0) {
-                xError += srcW;
-                xt++;
-              }
-            }
-          }
-        }
-        yError -= sy;
-        offso += srcW;
-        if (yError < 0) {
-          yError += srcH;
-          yt++;
-          offsd += pitch;
-        }
-      }
+      const w = screen.width;
+      this.blitAny(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, cut, (d, s) => {
+        const p = screen.physical(d);
+        const c = image[s];
+        for (let r = 0; r < k; r++) for (let q = 0; q < k; q++) put(out, p + r * w + q, c);
+      });
     }
+  }
+
+  /** The blit for this draw: the unscaled fast path when possible. */
+  private blitAny(
+    x1: number,
+    y1: number,
+    spx: number,
+    spy: number,
+    x: number,
+    y: number,
+    sx: number,
+    sy: number,
+    screenX: number,
+    screenY: number,
+    pitch: number,
+    cut: number | null,
+    plot: (d: number, s: number) => void,
+  ): void {
+    if (cut === null && sx === spx && sy === spy) this.blit1(x1, y1, spx, spy, x, y, screenX, screenY, pitch, plot);
+    else this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, cut, plot);
   }
 
   /**
@@ -380,18 +438,12 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint32Array,
+    screen: Screen,
     screenX: number,
     screenY: number,
     pitch: number,
   ): void {
-    const image = this.image;
-    if (image === null) return;
-    const plot = (d: number, s: number) => {
-      put(screen, d, image[s]);
-    };
-    if (sx === spx && sy === spy) this.blit1(x1, y1, spx, spy, x, y, screenX, screenY, pitch, plot);
-    else this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, null, plot);
+    this.drawColour(x1, y1, spx, spy, x, y, sx, sy, screen, screenX, screenY, pitch, null);
   }
 
   drawSpriteCut(
@@ -403,17 +455,13 @@ export class Bitmap {
     y: number,
     sx: number,
     sy: number,
-    screen: Uint32Array,
+    screen: Screen,
     screenX: number,
     screenY: number,
     pitch: number,
     cut: number,
   ): void {
-    const image = this.image;
-    if (image === null) return;
-    this.blit(x1, y1, spx, spy, x, y, sx, sy, screenX, screenY, pitch, cut, (d, s) => {
-      put(screen, d, image[s]);
-    });
+    this.drawColour(x1, y1, spx, spy, x, y, sx, sy, screen, screenX, screenY, pitch, cut);
   }
 
   /** OR the collision `type` into every pixel covered by the sprite. */

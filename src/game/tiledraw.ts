@@ -7,6 +7,7 @@
  * size). Positions are screen coordinates; most callers add GAME_VIEW_X/Y to
  * room coordinates. Sizes default to a 2×2-tile sprite (32×32 pixels).
  */
+import type { Screen } from '../engine/screen';
 import { SCREEN_X, SCREEN_Y, TILE_SIZE_X, TILE_SIZE_Y } from './constants';
 import { G } from './state';
 
@@ -14,18 +15,18 @@ const SPRITE_W = TILE_SIZE_X * 2;
 const SPRITE_H = TILE_SIZE_Y * 2;
 
 /** Draw tile `t` scaled to w×h and paint its collision type. */
-export function drawTile(screen: Uint32Array, t: number, x: number, y: number, w = SPRITE_W, h = SPRITE_H): void {
+export function drawTile(screen: Screen, t: number, x: number, y: number, w = SPRITE_W, h = SPRITE_H): void {
   G.tiles[t].draw(x, y, w, h, screen, G.collision!, SCREEN_X, SCREEN_Y, SCREEN_X);
 }
 
 /** Draw tile `t` at its own size and paint its collision type. */
-export function drawTileNative(screen: Uint32Array, t: number, x: number, y: number): void {
+export function drawTileNative(screen: Screen, t: number, x: number, y: number): void {
   G.tiles[t].drawNative(x, y, screen, G.collision!, SCREEN_X, SCREEN_Y, SCREEN_X);
 }
 
 /** Draw tile `t` with `cut` rows hidden (characters entering a door); no collision. */
 export function drawTileCut(
-  screen: Uint32Array,
+  screen: Screen,
   t: number,
   x: number,
   y: number,
@@ -42,7 +43,7 @@ export function drawTileMask(t: number, x: number, y: number, w = SPRITE_W, h = 
 }
 
 /** Draw tile `t` without painting a collision type. */
-export function drawTileNoMask(screen: Uint32Array, t: number, x: number, y: number, w = SPRITE_W, h = SPRITE_H): void {
+export function drawTileNoMask(screen: Screen, t: number, x: number, y: number, w = SPRITE_W, h = SPRITE_H): void {
   G.tiles[t].drawNoMask(x, y, w, h, screen, SCREEN_X, SCREEN_Y, SCREEN_X);
 }
 

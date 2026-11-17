@@ -3,7 +3,9 @@
  *
  * - Room files are bundled as text and are available synchronously.
  * - Graphics (PCX) are fetched up front for the active and default sets, so
- *   the game can keep its synchronous `loadBitmap()` calls.
+ *   the game can keep its synchronous `loadBitmap()` calls. A set may have HD
+ *   versions of its bitmaps as PNG in `graphics/<set>/hd/` (e.g. tiles.png at
+ *   twice the size of tiles.pcx); they are decoded to RGBA while preloading.
  * - Sounds are decoded by the audio module (see audio.ts).
  *
  * Paths use the remake's layout: `graphics/<set>/`, `sound/<set>/`, `rooms/`.
@@ -19,6 +21,11 @@ const graphicUrls = import.meta.glob('../../assets/graphics/*/*.pcx', {
   import: 'default',
   eager: true,
 }) as Record<string, string>;
+const hdUrls = import.meta.glob('../../assets/graphics/*/hd/*.png', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
 const soundUrls = import.meta.glob('../../assets/sound/*/*.{wav,ogg}', {
   query: '?url',
   import: 'default',
@@ -29,12 +36,22 @@ const PREFIX = '../../assets/';
 
 /** "graphics/original/tiles.pcx" → bundled URL. */
 const urlIndex = new Map<string, string>();
-for (const [k, v] of Object.entries({ ...graphicUrls, ...soundUrls })) urlIndex.set(k.slice(PREFIX.length), v);
+for (const [k, v] of Object.entries({ ...graphicUrls, ...hdUrls, ...soundUrls }))
+  urlIndex.set(k.slice(PREFIX.length), v);
 
 const textIndex = new Map<string, string>();
 for (const [k, v] of Object.entries(roomTexts)) textIndex.set(k.slice(PREFIX.length), v);
 
 const binaryCache = new Map<string, Uint8Array>();
+
+/** A decoded image: RGBA pixels packed as in ImageData. */
+export interface RGBAImage {
+  width: number;
+  height: number;
+  pixels: Uint32Array;
+}
+
+const imageCache = new Map<string, RGBAImage>();
 
 /** Graphic sets in menu order; "original" first, like the remake's default. */
 export const GRAPHIC_SETS = ['original', 'naramura', 'alternate', 'boltian', 'hinox', 'alfonso'];
@@ -60,23 +77,54 @@ export function registerBinary(path: string, data: Uint8Array): void {
   binaryCache.set(path, data);
 }
 
-/** Fetch all PCX files of the given graphic sets into the cache. */
+/** Synchronous read of a preloaded image (HD graphics); null if missing or not loaded. */
+export function readImage(path: string): RGBAImage | null {
+  return imageCache.get(path) ?? null;
+}
+
+/** Put a decoded image into the cache directly (used by tests running outside the browser). */
+export function registerImage(path: string, image: RGBAImage): void {
+  imageCache.set(path, image);
+}
+
+async function fetchBytes(path: string, url: string): Promise<ArrayBuffer> {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+  return r.arrayBuffer();
+}
+
+/** Decode a PNG (or any browser image) to straight, non-premultiplied RGBA. */
+async function decodeImage(data: ArrayBuffer): Promise<RGBAImage> {
+  const bmp = await createImageBitmap(new Blob([data]), {
+    premultiplyAlpha: 'none',
+    colorSpaceConversion: 'none',
+  });
+  const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(bmp, 0, 0);
+  const rgba = ctx.getImageData(0, 0, bmp.width, bmp.height).data;
+  return {
+    width: bmp.width,
+    height: bmp.height,
+    pixels: new Uint32Array(rgba.buffer, rgba.byteOffset, rgba.length / 4),
+  };
+}
+
+/** Fetch all PCX files (and decode the HD PNGs) of the given graphic sets into the cache. */
 export async function preloadGraphics(sets: string[]): Promise<void> {
   const jobs: Promise<void>[] = [];
   for (const [path, url] of urlIndex) {
-    if (!path.endsWith('.pcx')) continue;
     const set = path.split('/')[1];
-    if (!sets.includes(set) || binaryCache.has(path)) continue;
-    jobs.push(
-      fetch(url)
-        .then((r) => {
-          if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-          return r.arrayBuffer();
-        })
-        .then((buf) => {
-          binaryCache.set(path, new Uint8Array(buf));
-        }),
-    );
+    if (!path.startsWith('graphics/') || !sets.includes(set)) continue;
+    if (path.endsWith('.pcx') && !binaryCache.has(path)) {
+      jobs.push(fetchBytes(path, url).then((buf) => void binaryCache.set(path, new Uint8Array(buf))));
+    } else if (path.endsWith('.png') && !imageCache.has(path)) {
+      jobs.push(
+        fetchBytes(path, url)
+          .then(decodeImage)
+          .then((img) => void imageCache.set(path, img)),
+      );
+    }
   }
   await Promise.all(jobs);
 }

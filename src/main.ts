@@ -7,7 +7,9 @@
  *   ?autostart    skip the "click to start" screen (audio stays locked)
  *   ?mute         start muted
  *   ?manual       do not run the loop; advance with window.mog.step(n)
+ *   ?scale=N      frame buffer pixels per game pixel (default 2: 1280×800)
  */
+import { Screen } from './engine/screen';
 import { SCREEN_X, SCREEN_Y } from './game/constants';
 import { redoDemonIntro } from './game/demons';
 import {
@@ -53,10 +55,11 @@ const FRAME_MS = 1000 / FPS;
 
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
 const overlay = document.getElementById('overlay') as HTMLDivElement;
-const video = new Video(canvas);
+const SCALE = Number(params.get('scale')) || 2;
+const video = new Video(canvas, SCALE);
 
-/** The RGBA frame buffer the game draws into (render.cpp: buffer_screen). */
-const bufferScreen = new Uint32Array(SCREEN_X * SCREEN_Y);
+/** The frame buffer the game draws into (render.cpp: buffer_screen). */
+const bufferScreen = new Screen(SCREEN_X, SCREEN_Y, SCALE);
 
 let running = false;
 let busy = false;
