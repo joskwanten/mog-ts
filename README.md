@@ -59,8 +59,11 @@ op precies twee keer de maat van de PCX (bv. `tiles.png` van 1280×800 naast `ti
 van 640×400), met transparantie in het alfakanaal. Het beeld komt dan uit de PNG; de
 botsingen blijven van de PCX, dus het spel speelt exact hetzelfde. Ontbreekt een PNG, dan
 wordt die bitmap gewoon vergroot. `tools/upscale-hd.py <set>` maakt zo'n HD-set met
-[Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) (`realesrgan-ncnn-vulkan`); de
-naramura-set heeft er al een. De port is
+[Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) (`realesrgan-ncnn-vulkan`): kamertiles
+naadloos per herhalend blok, randen van letters en sprites zacht. De naramura-set heeft er
+al een (model `realesrgan-x4plus-anime`).
+
+De port is
 eerst getrouw vertaald en daarna opgeschoond: Engelse camelCase-namen (automatisch
 hernoemd via de TypeScript language service), Prettier-opmaak. Welke C++-naam bij welke
 TypeScript-naam hoort staat in [NAMES.md](NAMES.md); de werkwijze en modulekaart in

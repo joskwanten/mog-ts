@@ -5,8 +5,10 @@ For every PCX of assets/graphics/<set>/ this writes assets/graphics/<set>/hd/<na
 at twice the size:
   - the picture in the palette of konami.pcx (as the game shows it), upscaled by
     Real-ESRGAN (x4 model, then reduced to x2 with Lanczos), and
-  - the transparency (colour index 0) enlarged by repeating pixels, so the outlines
-    stay exactly those of the original (the collisions use the PCX anyway).
+  - the transparency (colour index 0) upscaled the same way, so outlines (letters,
+    sprites) get smooth, anti-aliased edges instead of steps; only the edges change,
+    inside and outside stay fully opaque or transparent (--alpha nearest: repeat the
+    pixels instead). The collisions use the PCX anyway.
 Transparent areas are filled with the nearest opaque colour before upscaling, so
 the upscaler does not pull dark edges into the sprites.
 
@@ -20,6 +22,7 @@ patterns into the noise. The tile numbers come from tests/golden/tiles.txt (the 
 table of loadGraphics).
 
 Usage: python3 tools/upscale-hd.py <set> [--model realesrgan-x4plus] [--only tiles.pcx,...] [--denoise 0.5]
+       [--alpha smooth|nearest]
 Needs Pillow and realesrgan-ncnn-vulkan (REALESRGAN=path/to/realesrgan-ncnn-vulkan,
 default ~/Develop/tools/realesrgan/realesrgan-ncnn-vulkan).
 """
@@ -34,7 +37,7 @@ import tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SCALE = 2
@@ -181,6 +184,19 @@ def compose(
     return rgb, mask
 
 
+def smooth_alpha(mask: Image.Image, model: str, tmp: Path) -> Image.Image:
+    """The opacity mask at 2×, with smooth edges: the mask upscaled like a picture, used only
+    along the outlines (pixels that are fully inside or outside stay as they were)."""
+    up = upscale(mask.convert("RGB"), model, tmp).convert("L")
+    # A steeper curve: soft but not blurry edges.
+    up = up.point(lambda v: 0 if v < 48 else 255 if v > 208 else round((v - 48) * 255 / 160))
+    near = mask.resize(up.size, Image.NEAREST)
+    inside = mask.filter(ImageFilter.MinFilter(3)).resize(up.size, Image.NEAREST)
+    outside = mask.filter(ImageFilter.MaxFilter(3)).resize(up.size, Image.NEAREST)
+    edge = ImageChops.difference(outside, inside)  # 255 near an outline
+    return Image.composite(up, near, edge)
+
+
 def upscale_room_tiles(
     sheets: dict[str, tuple[Image.Image, Image.Image]],
     target: str,
@@ -253,6 +269,7 @@ def main() -> None:
         default=0.5,
         help="soften the dithering of room tiles before upscaling (Gaussian radius in game pixels; 0 = off)",
     )
+    ap.add_argument("--alpha", choices=["smooth", "nearest"], default="smooth", help="how to enlarge transparency")
     args = ap.parse_args()
 
     set_dir = ROOT / "assets" / "graphics" / args.set
@@ -271,7 +288,11 @@ def main() -> None:
             blocks, singles = upscale_room_tiles(sheets, pcx.name, big, args.model, Path(t), args.denoise)
             if blocks or singles:
                 print(f"{pcx.name}: {blocks} repeating blocks, {singles} other room tiles upscaled in context")
-            alpha = mask.resize(big.size, Image.NEAREST)
+            alpha = (
+                smooth_alpha(mask, args.model, Path(t))
+                if args.alpha == "smooth"
+                else mask.resize(big.size, Image.NEAREST)
+            )
             big.putalpha(alpha)
             target = out_dir / (pcx.stem + ".png")
             big.save(target, optimize=True)
