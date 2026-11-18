@@ -62,7 +62,14 @@ botsingen blijven van de PCX, dus het spel speelt exact hetzelfde. Ontbreekt een
 wordt die bitmap gewoon vergroot. `tools/upscale-hd.py <set>` maakt zo'n HD-set met
 [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) (`realesrgan-ncnn-vulkan`): kamertiles
 naadloos per herhalend blok, randen van letters en sprites zacht. De naramura-set heeft er
-al een (model `realesrgan-x4plus-anime`).
+al een (model `realesrgan-x4plus-anime`). Sprites worden elk los opgeschaald, zodat sprites
+die in de sheet tegen elkaar liggen niet in elkaar overlopen.
+
+**Tussenframes.** Voor animaties met weinig standen (zoals de vleugels van de vleermuis)
+kan een set extra HD-frames meeleveren in `hd/anim/<tilenummer>.png`: een strook frames
+van de HD-maat van de tile, frame 0 de tile zelf. Het spel toont ze in de spelframes dat
+de tile in beeld staat; de botsingen blijven die van de tile. `tools/inbetween.py` maakt
+ze met RIFE (goed voor kleine bewegingen; sterk verschillende standen tekenen we beter zelf).
 
 De port is
 eerst getrouw vertaald en daarna opgeschoond: Engelse camelCase-namen (automatisch

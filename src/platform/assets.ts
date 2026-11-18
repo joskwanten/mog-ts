@@ -6,6 +6,7 @@
  *   the game can keep its synchronous `loadBitmap()` calls. A set may have HD
  *   versions of its bitmaps as PNG in `graphics/<set>/hd/` (e.g. tiles.png at
  *   twice the size of tiles.pcx); they are decoded to RGBA while preloading.
+ *   `hd/anim/<tile>.png` holds in-between frames for tile number <tile>.
  * - Sounds are decoded by the audio module (see audio.ts).
  *
  * Paths use the remake's layout: `graphics/<set>/`, `sound/<set>/`, `rooms/`.
@@ -21,7 +22,7 @@ const graphicUrls = import.meta.glob('../../assets/graphics/*/*.pcx', {
   import: 'default',
   eager: true,
 }) as Record<string, string>;
-const hdUrls = import.meta.glob('../../assets/graphics/*/hd/*.png', {
+const hdUrls = import.meta.glob(['../../assets/graphics/*/hd/*.png', '../../assets/graphics/*/hd/anim/*.png'], {
   query: '?url',
   import: 'default',
   eager: true,
@@ -75,6 +76,11 @@ export function readBinary(path: string): Uint8Array | null {
 /** Put a file into the cache directly (used by tests running outside the browser). */
 export function registerBinary(path: string, data: Uint8Array): void {
   binaryCache.set(path, data);
+}
+
+/** Paths of the preloaded images whose path starts with `prefix`. */
+export function imagePaths(prefix: string): string[] {
+  return [...imageCache.keys()].filter((p) => p.startsWith(prefix));
 }
 
 /** Synchronous read of a preloaded image (HD graphics); null if missing or not loaded. */

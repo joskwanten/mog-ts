@@ -12,6 +12,10 @@ at twice the size:
 Transparent areas are filled with the nearest opaque colour before upscaling, so
 the upscaler does not pull dark edges into the sprites.
 
+The sprites (the other tiles of the tile table) are upscaled once more each on their
+own, with a transparent margin: in the whole sheet, sprites that touch bleed into each
+other.
+
 Room tiles (the 16×16 tiles the room files are made of) are upscaled once more in the
 arrangement the rooms use, and the result replaces them in the HD sheet; otherwise the
 upscaler sees each tile next to whatever lies beside it in the sheet, and repeating
@@ -258,6 +262,64 @@ def upscale_room_tiles(
     return blocks, len(singles)
 
 
+SPRITE_MARGIN = 8
+MAX_SPRITE = 160  # larger rectangles (title screens, the status bar) stay with the whole sheet
+
+
+def sprite_rects(sheet: str) -> list[tuple[int, int, int, int]]:
+    """The rectangles (x, y, w, h) of the tiles of `sheet` (e.g. "enemy.pcx") that are not room
+    tiles, from the tile table (tests/golden/tiles.txt), larger ones first."""
+    stem = sheet.removesuffix(".pcx")
+    room = {(x, y) for name, x, y in tile_table().values() if name == sheet}
+    rects = set()
+    for line in (ROOT / "tests" / "golden" / "tiles.txt").read_text().splitlines():
+        m = re.match(r"(\d+) (\w+) (\d+),(\d+) (\d+)x(\d+) ", line)
+        if not m or m.group(2) != stem:
+            continue
+        x, y, w, h = (int(m.group(i)) for i in range(3, 7))
+        if w <= MAX_SPRITE and h <= MAX_SPRITE and not (w == h == TILE and (x, y) in room):
+            rects.add((x, y, w, h))
+    return sorted(rects, key=lambda r: -r[2] * r[3])
+
+
+def upscale_sprites(
+    sheet: str, rgb: Image.Image, mask: Image.Image, big: Image.Image, alpha: Image.Image, model: str, tmp: Path
+) -> int:
+    """
+    Re-upscale every sprite of the sheet on its own, with a transparent margin, and paste it
+    (colour and transparency) into `big` and `alpha`. In the whole sheet, sprites that lie
+    against each other bleed into one another (a blue speck of the sprite above on a bat).
+    """
+    rects = sprite_rects(sheet)
+    if not rects:
+        return 0
+    m = SPRITE_MARGIN
+    # Shelf packing: rows of cells up to 1024 pixels wide.
+    places, x, y, row_h = [], 0, 0, 0
+    for _, _, w, h in rects:
+        cw, ch = w + 2 * m, h + 2 * m
+        if x + cw > 1024:
+            x, y, row_h = 0, y + row_h, 0
+        places.append((x, y))
+        x += cw
+        row_h = max(row_h, ch)
+    size = (1024, y + row_h)
+    mos_rgb = Image.new("RGB", size)
+    mos_mask = Image.new("L", size)
+    for (rx, ry, w, h), (px, py) in zip(rects, places):
+        box = (rx, ry, rx + w, ry + h)
+        mos_rgb.paste(rgb.crop(box), (px + m, py + m))
+        mos_mask.paste(mask.crop(box), (px + m, py + m))
+    up_rgb = upscale(bleed(mos_rgb, mos_mask), model, tmp)
+    up_alpha = smooth_alpha(mos_mask, model, tmp)
+    k = SCALE
+    for (rx, ry, w, h), (px, py) in zip(rects, places):
+        src = ((px + m) * k, (py + m) * k, (px + m + w) * k, (py + m + h) * k)
+        big.paste(up_rgb.crop(src), (rx * k, ry * k))
+        alpha.paste(up_alpha.crop(src), (rx * k, ry * k))
+    return len(rects)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("set")
@@ -293,6 +355,10 @@ def main() -> None:
                 if args.alpha == "smooth"
                 else mask.resize(big.size, Image.NEAREST)
             )
+            if args.alpha == "smooth":
+                n = upscale_sprites(pcx.name, rgb, mask, big, alpha, args.model, Path(t))
+                if n:
+                    print(f"{pcx.name}: {n} sprites upscaled on their own")
             big.putalpha(alpha)
             target = out_dir / (pcx.stem + ".png")
             big.save(target, optimize=True)

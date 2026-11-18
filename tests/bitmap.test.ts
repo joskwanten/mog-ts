@@ -7,6 +7,7 @@
 import { expect, test } from 'vitest';
 import { Bitmap, rgba } from '../src/engine/bitmap';
 import { Screen } from '../src/engine/screen';
+import { Tile } from '../src/engine/tile';
 
 const W = 4;
 const H = 1;
@@ -90,4 +91,26 @@ test('clearing a rectangle also clears it in the HD version', () => {
   bmp.clearRect(0, 0, 1, 1);
   expect([...bmp.getPixels()!]).toEqual([0, 0]);
   expect([...bmp.hd!.getPixels()!]).toEqual([0, 0, 0, 0, 0, 0, 0, 0]);
+});
+
+test('in-between frames are drawn on an HD screen only; the collision stays the tile’s own', () => {
+  const sheet = Bitmap.fromRGBA(1, 1, Uint32Array.of(A));
+  const tile = new Tile(sheet, 0, 0, 1, 1, 4);
+  // Strip of 2 frames at scale 2: frame 0 (the tile) and an in-between frame of colour B.
+  expect(tile.setInbetweens({ width: 4, height: 2, pixels: Uint32Array.of(A, A, B, B, A, A, B, B) })).toBe(2);
+
+  const hd = new Screen(1, 1, 2);
+  const collision = new Uint8Array(1);
+  tile.drawPhase(0, 0, 1, 1, hd, collision, 1, 1, 1, 1);
+  expect([...hd.pixels]).toEqual([B, B, B, B]);
+  expect([...collision]).toEqual([4]);
+
+  const low = new Screen(1, 1);
+  tile.drawPhase(0, 0, 1, 1, low, collision, 1, 1, 1, 1);
+  expect([...low.pixels]).toEqual([A]);
+});
+
+test('a strip that does not fit the tile is ignored', () => {
+  const tile = new Tile(Bitmap.fromRGBA(2, 2, new Uint32Array(4)), 0, 0, 2, 2, 0);
+  expect(tile.setInbetweens({ width: 5, height: 4, pixels: new Uint32Array(20) })).toBe(0);
 });

@@ -141,6 +141,11 @@ export class Bitmap {
     return hd !== null && hd.width === this.width * scale && hd.height === this.height * scale ? hd : null;
   }
 
+  /** Whether this bitmap has an HD version for a screen of this scale. */
+  hasHd(scale: number): boolean {
+    return this.hdFor(scale) !== null;
+  }
+
   /** The scale of the HD version relative to this bitmap (0: none). */
   private hdScale(): number {
     return this.hd === null ? 0 : this.hd.width / this.width;

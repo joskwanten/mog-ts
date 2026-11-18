@@ -33,7 +33,7 @@ import {
   loadDemon8,
   loadDemon9,
 } from './demons';
-import { loadBitmap, loadPalette } from './gameaux';
+import { attachInbetweens, loadBitmap, loadPalette } from './gameaux';
 import { gfx, tileIds } from './resources';
 import { G } from './state';
 
@@ -757,4 +757,6 @@ export function loadGraphics(): void {
     G.tiles[tileIds.demon + 6] = new Tile(gfx.final, TILE_SIZE_X * 28, 0, TILE_SIZE_X * 2, TILE_SIZE_Y * 2, T_NADA);
     G.tiles[tileIds.demon + 7] = new Tile(gfx.final, TILE_SIZE_X * 30, 0, TILE_SIZE_X * 8, TILE_SIZE_Y * 4, T_NADA);
   }
+
+  attachInbetweens();
 }

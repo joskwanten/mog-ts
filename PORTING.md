@@ -68,6 +68,11 @@ bitmap with the same blit in physical pixels; otherwise each logical pixel becom
 Code that changes a bitmap in place (water, dissolving demons) uses `clearRect` /
 `rotateRowLeft`, which change the HD version too; per-pixel copies use `copyPixel`.
 
+**In-between frames.** A tile may have extra HD frames (`graphics/<set>/hd/anim/<tile>.png`,
+a strip of frames of the tile's HD size, frame 0 the tile itself), shown by `drawTilePhase`
+in the game frames the tile stays on screen; the collision mask is always the tile's own.
+Only the bats use it so far (phase `state2 & 3`). `tools/inbetween.py` makes strips with RIFE.
+
 **Integer semantics.** C `int` arithmetic stays integer: every `int / int` is
 `idiv(a, b)`; `int(float)` is `toInt(x)`; `rand()` comes from `cutil.ts` (seedable).
 

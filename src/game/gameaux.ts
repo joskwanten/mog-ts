@@ -1,13 +1,13 @@
 import type { Screen } from '../engine/screen';
 import { gfx, sfx, tileIds } from './resources';
-import { drawTile, drawTileMask, drawTileNative, drawTileNoMask } from './tiledraw';
+import { drawTile, drawTileMask, drawTileNative, drawTileNoMask, drawTilePhase } from './tiledraw';
 /**
  * Port of gameaux.cpp: game initialisation, resource (re)loading, room
  * loading, map/status drawing and assorted helpers.
  */
 import { Bitmap, decodePCX, paletteToRGBA, rgba } from '../engine/bitmap';
 import { fillRect, memset } from '../engine/drawing';
-import { GRAPHIC_SETS, SOUND_SETS, readBinary, readImage } from '../platform/assets';
+import { GRAPHIC_SETS, SOUND_SETS, imagePaths, readBinary, readImage } from '../platform/assets';
 import { createSound, releaseMusicTemporarily, setSfxGain, setSoundPath, stopMusic } from '../platform/audio';
 import type { SDLKey } from '../platform/keyboard';
 import {
@@ -578,7 +578,8 @@ function drawEnemy(screen: Screen, o: GameObject, x: number, y: number): void {
       const row = idiv(o.y, TILE_SIZE_Y);
       let frame = 2;
       if (isWall(col, row) || !isWall(col, row - 1) || o.state === 1 || row === 0) frame = (o.state2 >> 2) % 2;
-      drawTile(screen, b + frame, x, y);
+      // Each wing position is shown for 4 frames: in-between frames fill them (render-only).
+      drawTilePhase(screen, b + frame, frame === 2 ? 0 : o.state2 & 3, x, y);
       break;
     }
     case T_SKELETON:
@@ -1463,6 +1464,22 @@ export function loadBitmap(name: string): Bitmap | null {
   }
   console.error(`ERROR: file ${name} not found.`);
   return null;
+}
+
+/**
+ * Attach in-between frames (render-only, not in the remake): `hd/anim/<tile>.png` of the
+ * active graphic set (or else of the default set) for tile number <tile>.
+ */
+export function attachInbetweens(): void {
+  const done = new Set<number>();
+  for (const dir of [G.graphicsPath, G.defaultGraphicsPath]) {
+    for (const path of imagePaths(`${dir}hd/anim/`)) {
+      const t = Number(path.slice(path.lastIndexOf('/') + 1).replace(/\.png$/, ''));
+      const img = readImage(path);
+      if (!Number.isInteger(t) || done.has(t) || G.tiles[t] === undefined || img === null) continue;
+      if (G.tiles[t].setInbetweens(img) > 0) done.add(t);
+    }
+  }
 }
 
 export function reloadAll(): void {

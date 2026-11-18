@@ -19,6 +19,19 @@ export function drawTile(screen: Screen, t: number, x: number, y: number, w = SP
   G.tiles[t].draw(x, y, w, h, screen, G.collision!, SCREEN_X, SCREEN_Y, SCREEN_X);
 }
 
+/** Draw tile `t` showing its in-between frame `phase` if it has one (render-only), and paint its collision type. */
+export function drawTilePhase(
+  screen: Screen,
+  t: number,
+  phase: number,
+  x: number,
+  y: number,
+  w = SPRITE_W,
+  h = SPRITE_H,
+): void {
+  G.tiles[t].drawPhase(x, y, w, h, screen, G.collision!, SCREEN_X, SCREEN_Y, SCREEN_X, phase);
+}
+
 /** Draw tile `t` at its own size and paint its collision type. */
 export function drawTileNative(screen: Screen, t: number, x: number, y: number): void {
   G.tiles[t].drawNative(x, y, screen, G.collision!, SCREEN_X, SCREEN_Y, SCREEN_X);
