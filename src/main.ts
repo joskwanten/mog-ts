@@ -8,6 +8,10 @@
  *   ?mute         start muted
  *   ?manual       do not run the loop; advance with window.mog.step(n)
  *   ?scale=N      frame buffer pixels per game pixel (default 2: 1280×800)
+ *   ?nogl         canvas-2D output without effects (no WebGL)
+ *
+ * Keys besides the game's: 9/F10 graphic set, 0/F11 sound set, 8/F8 light
+ * effects on/off (WebGL only; remembered).
  */
 import { Screen } from './engine/screen';
 import { SCREEN_X, SCREEN_Y } from './game/constants';
@@ -24,6 +28,7 @@ import {
 } from './game/gameaux';
 import { gameCycle } from './game/gamecycle';
 import { loadGraphics } from './game/gametiles';
+import { sceneLighting } from './game/lights';
 import { sfx } from './game/resources';
 import { G } from './game/state';
 import { preloadGraphics } from './platform/assets';
@@ -42,11 +47,14 @@ import {
   onKeyDown,
   pollKeyboard,
   SDLK_0,
+  SDLK_8,
   SDLK_9,
   SDLK_F10,
   SDLK_F11,
+  SDLK_F8,
   setKey,
 } from './platform/keyboard';
+import { GLVideo } from './platform/glvideo';
 import { Video } from './platform/video';
 
 const params = new URLSearchParams(location.search);
@@ -56,7 +64,17 @@ const FRAME_MS = 1000 / FPS;
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
 const overlay = document.getElementById('overlay') as HTMLDivElement;
 const SCALE = Number(params.get('scale')) || 2;
-const video = new Video(canvas, SCALE);
+const glVideo = params.has('nogl') ? null : GLVideo.create(canvas, SCALE);
+const video2d = glVideo === null ? new Video(canvas, SCALE) : null;
+const video = glVideo ?? video2d!;
+
+const FX_KEY = 'mog.fx';
+let effects = true;
+try {
+  effects = localStorage.getItem(FX_KEY) !== 'off';
+} catch {
+  // no storage: effects on
+}
 
 /** The frame buffer the game draws into (render.cpp: buffer_screen). */
 const bufferScreen = new Screen(SCREEN_X, SCREEN_Y, SCALE);
@@ -72,7 +90,8 @@ function setName(path: string): string {
 function frame(): void {
   pollKeyboard();
   gameCycle(bufferScreen);
-  video.present(bufferScreen, G);
+  if (glVideo !== null) glVideo.present(bufferScreen, G.collision, G, effects ? sceneLighting() : null);
+  else video2d!.present(bufferScreen, G);
 }
 
 function startLoop(): void {
@@ -162,6 +181,14 @@ async function boot(): Promise<void> {
     if (busy) return;
     if (key === SDLK_F10 || key === SDLK_9) void switchGraphicSet();
     if (key === SDLK_F11 || key === SDLK_0) void switchSoundSet();
+    if (key === SDLK_F8 || key === SDLK_8) {
+      effects = !effects;
+      try {
+        localStorage.setItem(FX_KEY, effects ? 'on' : 'off');
+      } catch {
+        // not remembered
+      }
+    }
   });
 
   const start = async () => {

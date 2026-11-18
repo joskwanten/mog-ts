@@ -29,6 +29,7 @@ Zoals in de remake (standaard, te wijzigen met **K** in het titelscherm):
 | Esc             | terug naar het titelscherm                                                      |
 | 9 / F10         | volgende grafische set (original, naramura, alternate, boltian, hinox, alfonso) |
 | 0 / F11         | volgende geluidsset (original, jorito, Rob, wolf, alternate, Bart)              |
+| 8 / F8          | lichteffecten aan/uit (belichting, schaduwen, gloed; wordt onthouden)           |
 | L (titelscherm) | wachtwoord invoeren                                                             |
 | PgUp / PgDn     | zoom                                                                            |
 
@@ -72,7 +73,13 @@ vergeleken met een golden master. Zo blijft opschonen veilig: één verschoven p
 ander geluid en de test faalt. Daarnaast moet de 2×-weergave, met en zonder (pixelgetrouw
 vergrote) HD-graphics, hetzelfde beeld geven als de 1×-weergave.
 
+**Lichteffecten.** Met WebGL wordt het beeld nabewerkt: de kamer wordt wat donkerder met
+licht rond de personages, vuur, explosies, feeën en lava (`src/game/lights.ts`), muren en
+figuren werpen een zachte schaduw, en heldere delen gloeien (`src/platform/glvideo.ts`).
+Dit zit alleen in de weergave; het spel en de botsingen merken er niets van.
+
 URL-parameters voor ontwikkelen: `?scale=N` (schermpixels per spelpixel, standaard 2),
+`?nogl` (canvas-2D zonder effecten),
 `?fps=N`, `?mute`, `?autostart`, `?manual`
 (de lus staat stil; stap met `mog.step(n)` in de console).
 
