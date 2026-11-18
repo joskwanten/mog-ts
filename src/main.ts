@@ -11,7 +11,7 @@
  *   ?nogl         canvas-2D output without effects (no WebGL)
  *
  * Keys besides the game's: 9/F10 graphic set, 0/F11 sound set, 8/F8 light
- * effects on/off (WebGL only; remembered).
+ * effects on/off (WebGL only; remembered), 7/F7 or a double-click: full screen.
  */
 import { Screen } from './engine/screen';
 import { SCREEN_X, SCREEN_Y } from './game/constants';
@@ -47,10 +47,12 @@ import {
   onKeyDown,
   pollKeyboard,
   SDLK_0,
+  SDLK_7,
   SDLK_8,
   SDLK_9,
   SDLK_F10,
   SDLK_F11,
+  SDLK_F7,
   SDLK_F8,
   setKey,
 } from './platform/keyboard';
@@ -158,6 +160,13 @@ async function switchSoundSet(): Promise<void> {
   }
 }
 
+/** Full screen on/off (Esc also leaves it). The canvas follows through the resize event. */
+function toggleFullscreen(): void {
+  if (document.fullscreenElement) void document.exitFullscreen();
+  else void document.documentElement.requestFullscreen().catch(() => undefined);
+}
+canvas.addEventListener('dblclick', toggleFullscreen);
+
 async function boot(): Promise<void> {
   installKeyboard();
   video.fitToWindow();
@@ -181,6 +190,7 @@ async function boot(): Promise<void> {
     if (busy) return;
     if (key === SDLK_F10 || key === SDLK_9) void switchGraphicSet();
     if (key === SDLK_F11 || key === SDLK_0) void switchSoundSet();
+    if (key === SDLK_F7 || key === SDLK_7) toggleFullscreen();
     if (key === SDLK_F8 || key === SDLK_8) {
       effects = !effects;
       try {

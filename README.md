@@ -30,6 +30,7 @@ Zoals in de remake (standaard, te wijzigen met **K** in het titelscherm):
 | 9 / F10         | volgende grafische set (original, naramura, alternate, boltian, hinox, alfonso) |
 | 0 / F11         | volgende geluidsset (original, jorito, Rob, wolf, alternate, Bart)              |
 | 8 / F8          | lichteffecten aan/uit (belichting, schaduwen, gloed; wordt onthouden)           |
+| 7 / F7          | volledig scherm aan/uit (ook: dubbelklik op het beeld; Esc gaat er ook uit)     |
 | L (titelscherm) | wachtwoord invoeren                                                             |
 | PgUp / PgDn     | zoom                                                                            |
 
